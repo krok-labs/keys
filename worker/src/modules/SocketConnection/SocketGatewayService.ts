@@ -2,7 +2,7 @@ import { OnGatewayConnection, SubscribeMessage, WebSocketGateway } from "@nestjs
 import { Socket } from "socket.io";
 
 @WebSocketGateway(80)
-export class WebsocketGateway implements OnGatewayConnection {
+export class SocketGatewayService implements OnGatewayConnection {
     handleConnection(client: Socket, ...args: any[]) {
         console.log("Client connected:");
         console.log(client.id);
