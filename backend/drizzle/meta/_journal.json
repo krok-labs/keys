@@ -15,6 +15,13 @@
       "when": 1714076800874,
       "tag": "0001_melted_sage",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1714076875636,
+      "tag": "0002_simple_ultimatum",
+      "breakpoints": true
     }
   ]
 }
