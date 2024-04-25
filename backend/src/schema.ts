@@ -1,5 +1,5 @@
 import { sql, relations } from "drizzle-orm";
-import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core"
+import { text, integer, sqliteTable, blob } from "drizzle-orm/sqlite-core"
 
 
 // User Schema
@@ -21,7 +21,7 @@ export const keys = sqliteTable('keys', {
 
 
 // Allowed Keys Schema
-export const allowedKeys = sqliteTable('allowedKeys', {
+export const allowedKeys = sqliteTable('allowed_keys', {
     // - User ID
     userId: integer('user_id').notNull().references(() => users.id),
 
@@ -32,10 +32,17 @@ export const allowedKeys = sqliteTable('allowedKeys', {
     isAllowed: integer('is_allowed', { mode: 'boolean' }).notNull().default(true),
 
     // - Creation Date
-    createdAt: integer('created_date', { mode: "timestamp" }).notNull().default(sql`CURRENT_TIMESTAMP`),
+    createdAt: integer('created_at', { mode: "timestamp" }).notNull().default(sql`CURRENT_TIMESTAMP`),
 
     // - Updated Date
     updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
+});
+
+// Temporary Keycards Schema
+export const temporaryKeycards = sqliteTable('temporary_keycards', {
+    documentsScan: blob('documents_scan_image').notNull(),
+    personScan: blob('person_scan_image'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
 // todo: Shared Keys
