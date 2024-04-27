@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "6844a1a4-87ae-413a-9638-6835178f78b7",
-  "prevId": "8e88cc53-21a7-4d8a-a039-01eed26024d7",
+  "id": "8156fe47-7121-4bd8-81f4-f3111f6682f1",
+  "prevId": "dd544e95-a373-421d-861f-3f3a68297787",
   "tables": {
     "allowed_keys": {
       "name": "allowed_keys",
@@ -94,6 +94,27 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "floor": {
+          "name": "floor",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -165,6 +186,13 @@
             "id"
           ],
           "isUnique": true
+        },
+        "users_aid_unique": {
+          "name": "users_aid_unique",
+          "columns": [
+            "aid"
+          ],
+          "isUnique": true
         }
       },
       "foreignKeys": {},
@@ -175,10 +203,7 @@
   "enums": {},
   "_meta": {
     "schemas": {},
-    "tables": {
-      "\"allowedKeys\"": "\"allowed_keys\"",
-      "\"temporaryKeycards\"": "\"temporary_keycards\""
-    },
+    "tables": {},
     "columns": {}
   }
 }

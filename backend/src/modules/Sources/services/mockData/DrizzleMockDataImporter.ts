@@ -26,9 +26,29 @@ export class DrizzleMockDataImporter implements OnApplicationBootstrap {
         // Test Keys
         const testKeys = await this.database.getInstance().insert(keys)
             .values([
-                { nfcId: 1111111, },
-                { nfcId: 2111111, },
-                { nfcId: 3211111, },
+                // Third floor
+                { nfcId: 1111111, title: "321", description: "Актова зала", floor: 3, },
+                { nfcId: 1111111, title: "307", description: "Мультимедійна аудиторія", floor: 3, },
+                { nfcId: 1111111, title: "308", description: "Серверна", floor: 3, },
+                { nfcId: 1111111, title: "305", description: "Мультимедійна аудиторія", floor: 3, },
+
+                // First floor
+                { nfcId: 2111111, title: "106", description: "Комп'ютерна аудиторія", floor: 1, },
+                { nfcId: 2111111, title: "132", description: "Мультимедійна аудиторія", floor: 1, },
+                { nfcId: 2111111, title: "122", description: "Мультимедійна аудиторія", floor: 1, },
+                { nfcId: 2111111, title: "120", description: "Мультимедійна аудиторія", floor: 1, },
+                { nfcId: 2111111, title: "117", description: "Мультимедійна аудиторія", floor: 1, },
+                { nfcId: 2111111, title: "116", description: "Мультимедійна аудиторія", floor: 1, },
+                { nfcId: 2111111, title: "124-1", description: "Мультимедійна аудиторія", floor: 1, },
+                { nfcId: 2111111, title: "124-2", description: "Мультимедійна аудиторія", floor: 1, },
+
+                // Zero floor
+                { nfcId: 3211111, title: "029", description: "Комп'ютерна аудиторія", floor: 0, },
+                { nfcId: 3211111, title: "028", description: "Комп'ютерна аудиторія", floor: 0, },
+                { nfcId: 3211111, title: "025", description: "Комп'ютерна аудиторія", floor: 0, },
+                { nfcId: 3211111, title: "024", description: "Комп'ютерна аудиторія", floor: 0, },
+                { nfcId: 3211111, title: "023", description: "Комп'ютерна аудиторія", floor: 0, },
+                { nfcId: 3211111, title: "022", description: "Комп'ютерна аудиторія", floor: 0, },
             ]).returning();
 
         // Test User

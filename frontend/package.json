@@ -26,6 +26,7 @@
   "type": "module",
   "dependencies": {
     "@iconify/json": "^2.2.200",
+    "animejs": "^3.2.2",
     "socket.io-client": "^4.7.5",
     "svelte-loading-spinners": "^0.3.6",
     "unplugin-icons": "^0.18.5"

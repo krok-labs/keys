@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "8e88cc53-21a7-4d8a-a039-01eed26024d7",
-  "prevId": "330d9669-1f10-48a6-9040-204592f21cab",
+  "id": "dd544e95-a373-421d-861f-3f3a68297787",
+  "prevId": "88a4b329-2e6e-481e-ae70-292edee2df01",
   "tables": {
-    "allowedKeys": {
-      "name": "allowedKeys",
+    "allowed_keys": {
+      "name": "allowed_keys",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -48,9 +48,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "allowedKeys_user_id_users_id_fk": {
-          "name": "allowedKeys_user_id_users_id_fk",
-          "tableFrom": "allowedKeys",
+        "allowed_keys_user_id_users_id_fk": {
+          "name": "allowed_keys_user_id_users_id_fk",
+          "tableFrom": "allowed_keys",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -61,9 +61,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "allowedKeys_key_id_keys_id_fk": {
-          "name": "allowedKeys_key_id_keys_id_fk",
-          "tableFrom": "allowedKeys",
+        "allowed_keys_key_id_keys_id_fk": {
+          "name": "allowed_keys_key_id_keys_id_fk",
+          "tableFrom": "allowed_keys",
           "tableTo": "keys",
           "columnsFrom": [
             "key_id"
@@ -109,8 +109,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "temporaryKeycards": {
-      "name": "temporaryKeycards",
+    "temporary_keycards": {
+      "name": "temporary_keycards",
       "columns": {
         "documents_scan_image": {
           "name": "documents_scan_image",
@@ -165,6 +165,13 @@
             "id"
           ],
           "isUnique": true
+        },
+        "users_aid_unique": {
+          "name": "users_aid_unique",
+          "columns": [
+            "aid"
+          ],
+          "isUnique": true
         }
       },
       "foreignKeys": {},
@@ -176,8 +183,6 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"allowedKeys\".\"created_date\"": "\"allowedKeys\".\"created_at\""
-    }
+    "columns": {}
   }
 }

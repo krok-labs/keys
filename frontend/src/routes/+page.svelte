@@ -2,18 +2,10 @@
     import { onMount } from "svelte";
     import { Circle } from "svelte-loading-spinners";
     import { goto } from "$app/navigation";
-    import { ApplicationConfiguration } from "$lib";
-    import { ApplicationRole } from "$lib/types";
 
     // Checking client configuration
     onMount(async () => {
-        await ApplicationConfiguration.fetchFromLocalStorage();
-
-        if ($ApplicationConfiguration == null) {
-            goto("/bootstrap");
-        } else {
-            goto(`/app/${$ApplicationConfiguration.role.toString()}`);
-        }
+        goto("/bootstrap");
     });
 </script>
 

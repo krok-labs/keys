@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "330d9669-1f10-48a6-9040-204592f21cab",
+  "id": "88a4b329-2e6e-481e-ae70-292edee2df01",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "allowedKeys": {
-      "name": "allowedKeys",
+    "allowed_keys": {
+      "name": "allowed_keys",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -29,8 +29,8 @@
           "autoincrement": false,
           "default": true
         },
-        "created_date": {
-          "name": "created_date",
+        "created_at": {
+          "name": "created_at",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -48,9 +48,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "allowedKeys_user_id_users_id_fk": {
-          "name": "allowedKeys_user_id_users_id_fk",
-          "tableFrom": "allowedKeys",
+        "allowed_keys_user_id_users_id_fk": {
+          "name": "allowed_keys_user_id_users_id_fk",
+          "tableFrom": "allowed_keys",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -61,9 +61,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "allowedKeys_key_id_keys_id_fk": {
-          "name": "allowedKeys_key_id_keys_id_fk",
-          "tableFrom": "allowedKeys",
+        "allowed_keys_key_id_keys_id_fk": {
+          "name": "allowed_keys_key_id_keys_id_fk",
+          "tableFrom": "allowed_keys",
           "tableTo": "keys",
           "columnsFrom": [
             "key_id"
@@ -105,6 +105,37 @@
           "isUnique": true
         }
       },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "temporary_keycards": {
+      "name": "temporary_keycards",
+      "columns": {
+        "documents_scan_image": {
+          "name": "documents_scan_image",
+          "type": "blob",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "person_scan_image": {
+          "name": "person_scan_image",
+          "type": "blob",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}

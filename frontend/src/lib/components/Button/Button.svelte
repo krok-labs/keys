@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { fade } from "svelte/transition";
+
   function getBackgroundColor() {
     switch (color) {
       case "transparent":
@@ -7,6 +9,15 @@
       case "blue":
         return "bg-blue-500 hover:bg-blue-600";
     
+      case "light-gray":
+        return "bg-gray-50 hover:bg-gray-200";
+
+      case "light":
+        return "bg-white hover:bg-gray-200";
+
+      case "red":
+        return "bg-red-500 hover:bg-red-600"
+
       default:
         return "bg-gray-100 hover:bg-gray-200"
     }
@@ -14,6 +25,7 @@
 
   function getTextColor() {
     switch (color) {
+      case "red":
       case "blue":
         return "text-white";
       
@@ -24,7 +36,7 @@
 
   let classes = "";
 
-  export let color: "blue" | "gray" | "transparent" = "gray";
+  export let color: "blue" | "gray" | "light-gray" | "light" | "transparent" | "red" = "gray";
   export let icon: any;
   export let text: string;
   export { classes as class };

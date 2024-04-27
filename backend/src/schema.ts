@@ -1,4 +1,4 @@
-import { sql, relations } from "drizzle-orm";
+import { sql, relations, InferSelectModel } from "drizzle-orm";
 import { text, integer, sqliteTable, blob } from "drizzle-orm/sqlite-core"
 
 
@@ -8,17 +8,22 @@ export const users = sqliteTable('users', {
     id: integer('id').unique().primaryKey({ autoIncrement: true }).notNull(),
     
     // - Azure ID
-    aid: text('aid').notNull()
+    aid: text('aid').notNull().unique()
 });
 
+export type UsersModel = InferSelectModel<typeof users>;
 
 // Key Schema
 export const keys = sqliteTable('keys', {
     // - Internal ID
     id: integer('id').unique().primaryKey({ autoIncrement: true }).notNull(),
-    nfcId: integer('nfc_id').notNull()
+    nfcId: integer('nfc_id').notNull(),
+    description: text('description'),
+    title: text('title').notNull(),
+    floor: integer('floor'),
 });
 
+export type KeysModel = InferSelectModel<typeof keys>;
 
 // Allowed Keys Schema
 export const allowedKeys = sqliteTable('allowed_keys', {
@@ -38,12 +43,16 @@ export const allowedKeys = sqliteTable('allowed_keys', {
     updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
+export type AllowedKeysModel = InferSelectModel<typeof allowedKeys>;
+
 // Temporary Keycards Schema
 export const temporaryKeycards = sqliteTable('temporary_keycards', {
     documentsScan: blob('documents_scan_image').notNull(),
     personScan: blob('person_scan_image'),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
+
+export type TemporaryKeycardsModel = InferSelectModel<typeof temporaryKeycards>;
 
 // todo: Shared Keys
 

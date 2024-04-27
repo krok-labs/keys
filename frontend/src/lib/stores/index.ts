@@ -1,2 +1,3 @@
 export * from './SocketAPIClient';
-export * from './ApplicationConfiguration';
+export * from "./admin";
+export * from "./sync";

@@ -20,3 +20,11 @@ todo:
 1) Add /users/aid={aid} route
 2) Add /users/id={id} route
 3) Add /users/{gid}/photo route
+
+
+26.04.2024
+
+1) Reading keycard
+2) Retrieving users from /keycard/:keycardId
+3) Retrieving users' allowedKeys
+4) 
