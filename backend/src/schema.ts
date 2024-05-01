@@ -1,7 +1,6 @@
 import { sql, relations, InferSelectModel } from "drizzle-orm";
 import { text, integer, sqliteTable, blob } from "drizzle-orm/sqlite-core"
 
-
 // User Schema
 export const users = sqliteTable('users', {
     // - Internal ID
@@ -25,6 +24,18 @@ export const keys = sqliteTable('keys', {
 
 export type KeysModel = InferSelectModel<typeof keys>;
 
+// KeyContract Schema
+export const keyContracts = sqliteTable('key_contract', {
+    id: integer('id').unique().primaryKey({ autoIncrement: true }).notNull(),
+    userId: integer('user_id').notNull().references(() => users.id),
+    keyId: integer('key_id').notNull().references(() => keys.id),
+    state: text('state', { enum: ['CURRENTLY_HOLDING', 'DEPOSITED'] }).notNull().default('CURRENTLY_HOLDING'),
+    pickedUpAt: text('picked_up_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    depositedAt: text('deposited_at'),
+});
+
+export type KeyContractsModel = InferSelectModel<typeof keyContracts>;
+
 // Allowed Keys Schema
 export const allowedKeys = sqliteTable('allowed_keys', {
     // - User ID
@@ -37,10 +48,10 @@ export const allowedKeys = sqliteTable('allowed_keys', {
     isAllowed: integer('is_allowed', { mode: 'boolean' }).notNull().default(true),
 
     // - Creation Date
-    createdAt: integer('created_at', { mode: "timestamp" }).notNull().default(sql`CURRENT_TIMESTAMP`),
+    createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 
     // - Updated Date
-    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
 export type AllowedKeysModel = InferSelectModel<typeof allowedKeys>;
@@ -49,7 +60,7 @@ export type AllowedKeysModel = InferSelectModel<typeof allowedKeys>;
 export const temporaryKeycards = sqliteTable('temporary_keycards', {
     documentsScan: blob('documents_scan_image').notNull(),
     personScan: blob('person_scan_image'),
-    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
+    createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
 export type TemporaryKeycardsModel = InferSelectModel<typeof temporaryKeycards>;
@@ -59,6 +70,7 @@ export type TemporaryKeycardsModel = InferSelectModel<typeof temporaryKeycards>;
 // User Relations
 export const userRelations = relations(users, ({ many }) => ({
     allowedKeys: many(allowedKeys),
+    contracts: many(keyContracts),
 }));
 
 // Allowed Keys Relations
@@ -67,7 +79,13 @@ export const allowedKeysRelations = relations(allowedKeys, ({ one }) => ({
     key: one(keys, { fields: [allowedKeys.keyId], references: [keys.id] })
 }));
 
+export const keyContractsRelations = relations(keyContracts, ({ one }) => ({
+    user: one(users, { fields: [keyContracts.userId], references: [users.id] }),
+    key: one(keys, { fields: [keyContracts.keyId], references: [keys.id] })    
+}));
+
 // Keys Relations
-export const keysRelations = relations(keys, ({ many }) => ({
+export const keysRelations = relations(keys, ({ one, many }) => ({
     allowedKeys: many(allowedKeys),
+    contracts: many(keyContracts),
 }));

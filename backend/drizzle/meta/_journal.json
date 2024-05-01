@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1714114126432,
-      "tag": "0000_flippant_songbird",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1714115577998,
-      "tag": "0001_lucky_raza",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1714122776300,
-      "tag": "0002_icy_retro_girl",
+      "when": 1714537196088,
+      "tag": "0000_clear_excalibur",
       "breakpoints": true
     }
   ]

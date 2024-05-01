@@ -19,7 +19,7 @@ GET /keycard/:id
 todo:
 1) Add /users/aid={aid} route
 2) Add /users/id={id} route
-3) Add /users/{gid}/photo route
+3) Add /users/{gid}/photo route 
 
 
 26.04.2024

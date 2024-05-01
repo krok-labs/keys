@@ -1,9 +1,9 @@
 import { Module, forwardRef } from "@nestjs/common";
+import { KeysModule } from "../Keys/module";
+import { SourcesModule } from "../Sources/module";
 
 import * as Services from "./services";
 import * as Controllers from "./controllers";
-import { KeysModule } from "../Cards/module";
-import { SourcesModule } from "../Sources/module";
 
 @Module({
     imports: [

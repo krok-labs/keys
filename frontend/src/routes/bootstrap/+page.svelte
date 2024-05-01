@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { Button, SynchronizationStore } from "$lib";
-    import { ApplicationRole, SynchronizationState } from "$lib/types";
+    import { ApplicationRole } from "$lib/types";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
-    import { RoleSelectedEvent } from "$lib/stores/sync/events";
+    import { RoleSelectedEvent, SynchronizationStore, SynchronizationState } from "$lib/modules/Sync";
 
     // chooseRole
     function chooseRole(role: ApplicationRole) {

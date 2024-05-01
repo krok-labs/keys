@@ -2,15 +2,14 @@
     import { goto } from '$app/navigation';
     import { Button } from '$lib/components';
     import { onMount } from 'svelte';
-    import { SynchronizationState } from '$lib/types';
-    import { SynchronizationStore } from '$lib';
+    import { SynchronizationStore, SynchronizationState } from '$lib/modules';
 
     import SolarKeyBold from '~icons/solar/key-bold';
     import SolarAddSquareBroken from '~icons/solar/add-square-broken';
-    import SolarCardOutline from '~icons/solar/card-outline';
     import SolarQuestionCircleLinear from '~icons/solar/question-circle-linear';
     import SolarCloudCrossLinear from '~icons/solar/cloud-cross-linear';
     import SolarRestartBold from '~icons/solar/restart-bold';
+    import SolarCardOutline from '~icons/solar/card-outline';
 
     let headerComponentHeight;
 </script>
@@ -43,7 +42,7 @@
             <div class="w-1/3 flex justify-center gap-6">
                 <Button icon={SolarAddSquareBroken} text="Видача ключей" color="blue" />
         
-                <!-- <Button icon={SolarCardOutline} text="Тимчасові картки" /> -->
+                <Button icon={SolarCardOutline} text="Тимчасові картки" />
             </div>
         
             <!-- Help and Other -->

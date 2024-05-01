@@ -1,7 +1,8 @@
 import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { DrizzleDatabase } from "../DrizzleDatabase";
-import { allowedKeys, keys, users } from "src/schema";
+import { allowedKeys, keyContracts, keys, users } from "src/schema";
 import { MockDataConfiguration } from "src/config";
+import { eq } from "drizzle-orm";
 
 @Injectable()
 export class DrizzleMockDataImporter implements OnApplicationBootstrap {
@@ -27,9 +28,9 @@ export class DrizzleMockDataImporter implements OnApplicationBootstrap {
         const testKeys = await this.database.getInstance().insert(keys)
             .values([
                 // Third floor
-                { nfcId: 1111111, title: "321", description: "Актова зала", floor: 3, },
+                { nfcId: 41730, title: "321", description: "Актова зала", floor: 3, },
                 { nfcId: 1111111, title: "307", description: "Мультимедійна аудиторія", floor: 3, },
-                { nfcId: 1111111, title: "308", description: "Серверна", floor: 3, },
+                { nfcId: 62210, title: "308", description: "Серверна", floor: 3, },
                 { nfcId: 1111111, title: "305", description: "Мультимедійна аудиторія", floor: 3, },
 
                 // First floor
@@ -62,6 +63,19 @@ export class DrizzleMockDataImporter implements OnApplicationBootstrap {
             .values([
                 { userId: user[0].id, keyId: testKeys[0].id },
                 { userId: user[0].id, keyId: testKeys[1].id }
+            ]);
+
+        // Giving some keys to test user
+        await this.database.getInstance().insert(keyContracts)
+            .values([
+                {
+                    userId: user[0].id,
+                    keyId: testKeys[3].id,
+                },
+                {
+                    userId: user[0].id,
+                    keyId: testKeys[5].id,
+                }
             ]);
 
         this.logger.warn("Imported mock data");

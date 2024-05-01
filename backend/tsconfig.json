@@ -19,7 +19,8 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@contracts": ["./src/contracts"],
-      "@types": ["./src/types"]
+      "@types": ["./src/types"],
+      "$backend/*": ["./src/*"]
     }
   }
 }

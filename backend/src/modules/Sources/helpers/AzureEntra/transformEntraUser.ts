@@ -9,5 +9,7 @@ export function transformEntraUser(user: User): AzureEntraUserInterface {
         // @huskie removing junk fields. Is there another, more "normal" way to do this?
         // @ts-ignore
         id: undefined,
+        // @ts-ignore
+        "@odata.context": undefined,
     }
 };

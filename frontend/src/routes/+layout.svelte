@@ -1,7 +1,8 @@
 <script>
-    import { onMount } from "svelte";
     import "../app.pcss";
-    import { SynchronizationStore } from "$lib";
+    
+    import { onMount } from "svelte";
+    import { SynchronizationStore } from "$lib/modules";
 
     onMount(() => {
         SynchronizationStore.initialize();
