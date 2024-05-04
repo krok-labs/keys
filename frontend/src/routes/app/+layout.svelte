@@ -10,6 +10,10 @@
     import SolarCloudCrossLinear from '~icons/solar/cloud-cross-linear';
     import SolarRestartBold from '~icons/solar/restart-bold';
     import SolarCardOutline from '~icons/solar/card-outline';
+    import { page } from '$app/stores';
+
+    $: side = $page.route.id?.includes("admin") ? "admin" : "guest";
+    $: selectedApp = $page.route.id?.includes("keys") ? "keys" : "cards";
 
     let headerComponentHeight;
 </script>
@@ -40,9 +44,13 @@
         
             <!-- Service select -->
             <div class="w-1/3 flex justify-center gap-6">
-                <Button icon={SolarAddSquareBroken} text="Видача ключей" color="blue" />
+                <Button on:click={() => {
+                    goto(`/app/${side}/keys`);
+                }} icon={SolarAddSquareBroken} text="Видача ключей" color={ selectedApp == "keys" ? "blue" : "gray" } />
         
-                <Button icon={SolarCardOutline} text="Тимчасові картки" />
+                <Button on:click={() => {
+                    goto(`/app/${side}/cards`);
+                }} icon={SolarCardOutline} text="Тимчасові картки" color={ selectedApp == "cards" ? "blue" : "gray" } />
             </div>
         
             <!-- Help and Other -->

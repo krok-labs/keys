@@ -1,13 +1,16 @@
 <script lang="ts">
     import { Button, CommittedKeyCard, SelectedKeyCard } from "$lib";
-    import { ApplicationStateStore, KeysService, KeysStore, UserStore, UsersService, KeysApplicationState } from "$lib/modules";
+    import { ApplicationStateStore, KeysService, KeysStore, UserStore, UsersService, ApplicationStateEnum } from "$lib/modules";
     import { Circle } from "svelte-loading-spinners";
 
     import SolarListArrowDownMinimalisticBold from '~icons/solar/list-arrow-down-minimalistic-bold';
     import SolarListArrowUpMinimalisticBold from '~icons/solar/list-arrow-up-minimalistic-bold';
     import SolarArchiveDownMinimlisticLineDuotone from '~icons/solar/archive-down-minimlistic-line-duotone';
     import SolarInboxLinear from '~icons/solar/inbox-linear';
-    
+    import SolarHelpLinear from '~icons/solar/help-linear';
+    import SolarRestartBold from '~icons/solar/restart-bold';
+    import { goto } from "$app/navigation";
+
     const SelectedKeysStore = UserStore.selectedKeys;
     const AllowedKeysStore = UserStore.allowedKeys;
     const CommittedKeysStore = UserStore.committedKeys;
@@ -34,7 +37,7 @@
     }
 </script>
 
-{ #if [KeysApplicationState.PICKING].includes($ApplicationStateStore.state) }
+{ #if [ApplicationStateEnum.PICKING].includes($ApplicationStateStore.state) }
     { #if $UserStore != null }
         <!-- Subheader with user information -->
         <header bind:clientHeight={subheaderComponentHeight} class="fixed z-20 w-full bg-gray-50 px-10 py-6 flex items-center justify-between">
@@ -67,7 +70,7 @@
                     await SelectedKeysStore.revokeAll();
 
                     // Changing current app state
-                    ApplicationStateStore.setState(KeysApplicationState.IDLE);
+                    ApplicationStateStore.setState(ApplicationStateEnum.IDLE);
                 }} icon={SolarArchiveDownMinimlisticLineDuotone} color="red" text="Відмінити операцію" />
 
                 <!-- Continue to next step buutton -->
@@ -79,19 +82,19 @@
     { /if }
 { /if }
 
-{ #if $ApplicationStateStore.state == KeysApplicationState.IDLE }
+{ #if $ApplicationStateStore.state == ApplicationStateEnum.IDLE }
     <div class="w-full h-screen bg-gray-100 flex flex-col items-center justify-center">
         <SolarInboxLinear class="w-8 h-8" />
 
         <h1 class="mt-4 text-xl font-medium">Очікування користувача</h1>
     </div>
-{ :else if $ApplicationStateStore.state == KeysApplicationState.PROCESSING_CARD }
+{ :else if $ApplicationStateStore.state == ApplicationStateEnum.PROCESSING_CARD }
     <div class="w-full h-screen bg-gray-100 flex flex-col items-center justify-center">
         <Circle size={30} color={"#374151"} />
         
         <p class="mt-4 text-gray-700">Завантаження данних...</p>
     </div>
-{ :else if $ApplicationStateStore.state == KeysApplicationState.PICKING }    
+{ :else if $ApplicationStateStore.state == ApplicationStateEnum.PICKING }    
     <div style="padding-top: {subheaderComponentHeight}px;">
         <!-- User keys -->
         <div class="px-10 py-6 flex gap-8">
@@ -131,8 +134,8 @@
                 <span class="block w-full bg-gray-200 opacity-50 h-1 my-3"></span>
                 
                 <div class="w-full flex items-stretch flex-wrap">
-                    { #each $CommittedKeysStore ?? [] as keyId }
-                        <CommittedKeyCard size="w-1/3" {keyId} />
+                    { #each $CommittedKeysStore ?? [] as committedKey }
+                        <CommittedKeyCard size="w-1/3" {committedKey} />
                     { /each }
                 </div>
             </div>
@@ -226,5 +229,16 @@
                 { /await }
             { /if }
         </section>
+    </div>
+{ :else }
+    <div class="w-full h-screen flex flex-col items-center justify-center">
+        <SolarHelpLinear class="w-8 h-8" />
+
+        <h1 class="mt-4 text-xl font-medium">Невідомий стан застосунку</h1>
+        <p class="w-1/4 text-center text-sm text-gray-800">Невідомий стан застосунку: {$ApplicationStateStore.state}. Будь ласка, переналаштуйте застосунок.</p>
+
+        <Button on:click={() => {
+            goto('/bootstrap');
+        }} icon={SolarRestartBold} class="mt-6" text="Переналаштувати застосунок" />
     </div>
 { /if }

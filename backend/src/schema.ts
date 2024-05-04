@@ -81,7 +81,7 @@ export const allowedKeysRelations = relations(allowedKeys, ({ one }) => ({
 
 export const keyContractsRelations = relations(keyContracts, ({ one }) => ({
     user: one(users, { fields: [keyContracts.userId], references: [users.id] }),
-    key: one(keys, { fields: [keyContracts.keyId], references: [keys.id] })    
+    key: one(keys, { fields: [keyContracts.keyId], references: [keys.id] }),
 }));
 
 // Keys Relations

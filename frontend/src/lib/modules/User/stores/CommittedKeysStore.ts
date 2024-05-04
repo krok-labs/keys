@@ -3,7 +3,17 @@ import { KeysStore } from "$lib/modules/Keys";
 import { writable } from "svelte/store";
 import type { UserStore } from "../UserStore";
 
-type CommittedKeysStoreInterface = number[];
+export interface CommittedKey {
+    id: number;
+    state: CommittedKeyState;
+};
+
+export enum CommittedKeyState {
+    DEPOSITED = 'deposited',
+    CURRENTLY_HOLDING = 'currently_holding',
+};
+
+type CommittedKeysStoreInterface = CommittedKey[];
 
 export class CommittedKeysStoreClass extends AbstractSharedStore<CommittedKeysStoreInterface> {
     public subscribe;
@@ -32,7 +42,34 @@ export class CommittedKeysStoreClass extends AbstractSharedStore<CommittedKeysSt
             keys.filter((x) => {
                 if (x.contracts.filter((y) => y.userId == user.id && y.state == 'CURRENTLY_HOLDING').length > 0) return true;
                 return false;
-            }).map((x) => x.id)
+            }).map((x) => ({
+                id: x.id,
+                state: CommittedKeyState.CURRENTLY_HOLDING,
+            }))
         ));
     };
+
+    public async removeIfNeeded(keyId: number) {
+        this.update((store) => (
+            store.filter((x) => x.id != keyId)
+        ));
+    }
+
+    public async setKeyState(keyId: number, state: CommittedKeyState) {
+        // Checking if we have this key in store
+        const store = await getStore(this.subscribe);
+
+        // todo: throw error
+        if (store.findIndex(x => x.id == keyId) == -1) return;
+    
+        this.update((store) => {
+            return [
+                ...store.filter(x => x.id != keyId),
+                {
+                    id: keyId,
+                    state: state,
+                },
+            ];
+        });
+    }
 };

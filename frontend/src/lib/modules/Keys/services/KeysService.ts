@@ -4,6 +4,7 @@ import type { KeysControllerContract } from "$backend/modules/Keys/contracts";
 import { getStore } from "$lib/helpers";
 import { UserStore } from "$lib/modules/User";
 import type { CommitKeyPayload } from "$backend/modules/Keys/payloads";
+import { KeysStore } from "../stores";
 
 class KeysServiceClass {
     public async getAllKeys(): ReturnType<KeysControllerContract["getAllKeys"]> {
@@ -45,6 +46,40 @@ class KeysServiceClass {
                 method: 'DELETE'
             })
         ).json();
+    };
+
+    public async depositKey(keyId: number) {
+        return (
+            await fetch(`${ApplicationConfiguration.apiUrl}/keys/${keyId}/deposit`, {
+                method: 'POST'
+            })
+        ).json();
+    };
+
+    public async isAvailable(keyId: number): Promise<boolean> {
+        // todo: use api instead of store?
+        const store = await getStore(KeysStore.subscribe);
+        const key = store.find((x) => x.id == keyId);
+
+        // todo: throw error?
+        if (key == null) return true;
+
+        return !(key.contracts.filter((x) => x.state == 'CURRENTLY_HOLDING').length > 0);
+    };
+
+    public async canDeposit(keyId: number) {
+        // todo: use api instead of store?
+        
+        // Getting user
+        const user = await getStore(UserStore.subscribe);
+        const keys = await getStore(KeysStore.subscribe);
+
+        const key = keys.find((x) => x.id == keyId);
+        // todo: throw error
+        if (key == null) return;
+
+        // Checking if this user can return this key
+        return (key.contracts.filter((x) => x.userId == user.id && x.state == 'CURRENTLY_HOLDING').length > 0);
     };
 };
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { UserInterface } from "@types";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { DrizzleDatabase } from "src/modules/Sources/services";
 import { UsersService } from "src/modules/Users/services";
 import { UsersModel, keyContracts, keys, users } from "src/schema";
@@ -18,8 +18,8 @@ export class KeysService {
             .query.keys.findMany({
                 with: {
                     contracts: {
+                        where: eq(keyContracts.state, 'CURRENTLY_HOLDING'),
                         orderBy: keyContracts.pickedUpAt,
-                        limit: 10
                     }
                 },
             });
@@ -30,8 +30,8 @@ export class KeysService {
             .query.keys.findFirst({
                 with: {
                     contracts: {
+                        where: eq(keyContracts.state, 'CURRENTLY_HOLDING'),
                         orderBy: keyContracts.pickedUpAt,
-                        limit: 10
                     }
                 },
                 where: (keys, { or, eq }) => or(eq(keys.id, id), eq(keys.nfcId, id))
@@ -55,8 +55,26 @@ export class KeysService {
             )[0];
     };
 
-    public async updateCommit(commitId: number, state: 'CURRENTLY_HOLDING' | 'DEPOSITED') {
+    public async depositCommit(commitId: number) {
+        // Getting this commit
+        const commitsList = await this.database.getInstance()
+            .select()
+            .from(keyContracts)
+            .where(eq(keyContracts.id, commitId));
 
+        if (commitsList.length != 1) throw new Error('Commit not found');
+
+        const commit = commitsList[0];
+
+        // 1. Checking commit state
+        if (commit.state != 'CURRENTLY_HOLDING') throw new Error('Could not deposit this commit due to invalid state');
+
+        // 2. Depositing this commit
+        return await this.database.getInstance()
+            .update(keyContracts)
+            .set({ state: 'DEPOSITED', depositedAt: sql`CURRENT_TIMESTAMP` })
+            .where(eq(keyContracts.id, commit.id))
+            .returning();
     };
 
     public async revokeCommit(commitId: number) {

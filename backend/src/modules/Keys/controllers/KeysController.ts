@@ -35,7 +35,6 @@ export class KeysController implements KeysControllerContract {
 
         // 1. Checking if this key is available
         if (key.contracts.filter((x) => x.state == 'CURRENTLY_HOLDING').length > 0) {
-            console.log("error");
             throw new Error(`This key is not available right now. CommitIds: [${ key.contracts.map((x) => x.id) }]`);
         };
 
@@ -49,4 +48,20 @@ export class KeysController implements KeysControllerContract {
     ) {
         return this.keysService.revokeCommit(commitId);
     };
+
+    @Post('/:id/deposit')
+    public async depositKey(
+        @Param('id', ParseIntPipe) id: number
+    ) {
+        // Getting this key's contracts
+        const key = await this.keysService.getById(id);
+        if (key == null) throw new Error('Key not found');
+
+        // Getting CURRENTLY_HOLDING contracts
+        const contracts = key.contracts;
+        if (contracts.filter((x) => x.state == 'CURRENTLY_HOLDING').length != 1) throw new Error('Could not deposit this key');
+
+        const contract = contracts[0];
+        return this.keysService.depositCommit(contract.id);
+    }
 };

@@ -1,5 +1,5 @@
 import { getStore } from "$lib/helpers";
-import { ApplicationStateStore, KeysApplicationState } from "$lib/modules/Application";
+import { ApplicationStateStore, ApplicationStateEnum } from "$lib/modules/Application";
 import { KeysStore } from "$lib/modules/Keys";
 import { KeycardsService, UserStore } from "$lib/modules/User";
 
@@ -24,12 +24,12 @@ class CardIdEventClass {
 
         if (key != null) {
             // Checking application state
-            if (applicationState.state == KeysApplicationState.PICKING) {
+            if (applicationState.state == ApplicationStateEnum.PICKING) {
                 // Asking SelectedKeysStore to add this key
                 await UserStore.selectedKeys.addKeyById(key.id, "admin");
             };
         } else {
-            if (applicationState.state != KeysApplicationState.PICKING) {
+            if (applicationState.state != ApplicationStateEnum.PICKING) {
                 // Asking our backend to get
                 const users = await KeycardsService.getUsersFromKeycard(cardId);
 
@@ -37,7 +37,7 @@ class CardIdEventClass {
                 
                 // todo: multiple users
                 await UserStore.setUser(users[0]);
-                ApplicationStateStore.setState(KeysApplicationState.PICKING);
+                ApplicationStateStore.setState(ApplicationStateEnum.PICKING);
             };
         }
     };

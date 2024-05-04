@@ -1,14 +1,14 @@
 import { ApplicationType } from "$lib/types";
 import { writable } from "svelte/store";
 import { AbstractSharedStore } from "$lib/helpers";
-import { KeysApplicationState } from "../types";
+import { ApplicationStateEnum } from "../types";
 
-interface KeysApplicationStateInterface {
+interface ApplicationStateEnumInterface {
     type: ApplicationType.KEYS,
-    state: KeysApplicationState,
+    state: ApplicationStateEnum,
 };
 
-class ApplicationStateStoreClass extends AbstractSharedStore<KeysApplicationStateInterface> {
+class ApplicationStateStoreClass extends AbstractSharedStore<ApplicationStateEnumInterface> {
     public subscribe;
     protected update;
 
@@ -17,16 +17,16 @@ class ApplicationStateStoreClass extends AbstractSharedStore<KeysApplicationStat
     constructor() {
         super();
 
-        const { subscribe, update } = writable<KeysApplicationStateInterface>({
+        const { subscribe, update } = writable<ApplicationStateEnumInterface>({
             type: ApplicationType.KEYS,
-            state: KeysApplicationState.IDLE
+            state: ApplicationStateEnum.IDLE
         });
 
         this.update = update;
         this.subscribe = subscribe;
     };
 
-    public setState(state: KeysApplicationState) {
+    public setState(state: ApplicationStateEnum) {
         this.update((obj) => {
             return {
                 ...obj,

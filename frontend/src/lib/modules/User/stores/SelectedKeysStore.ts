@@ -2,6 +2,7 @@ import { writable } from "svelte/store";
 import { AbstractSharedStore, getStore } from "$lib/helpers";
 import type { UserStore } from "../UserStore";
 import { KeysService, KeysStore } from "$lib/modules/Keys";
+import { CommittedKeyState } from "./CommittedKeysStore";
 
 export enum SelectedKeyState {
     CONFIRMATION_REQUIRED = 'confirmation_required',
@@ -40,6 +41,9 @@ export class SelectedKeysStoreClass extends AbstractSharedStore<Array<SelectedKe
         const contract = await KeysService.commitKey(keyId);
         this.commitsMap.set(keyId, contract.id);
 
+        // Checking if we need to remove this key from CommittedKeys
+        this.userStore.committedKeys.removeIfNeeded(keyId);
+
         // Refetching info about this key
         await KeysStore.refetchKey(keyId);
     };
@@ -49,8 +53,27 @@ export class SelectedKeysStoreClass extends AbstractSharedStore<Array<SelectedKe
         const commitId = this.commitsMap.get(keyId);
         if (commitId == null) return false;
 
+        // Checking if we need to remove this key from CommittedKeys
+        this.userStore.committedKeys.removeIfNeeded(keyId);
+
         // Revoking this key
         await KeysService.revokeCommit(commitId);
+
+        // Refetching info about this key
+        await KeysStore.refetchKey(keyId);
+        return true;
+    };
+
+    public async depositKey(keyId: number) {
+        // Finding this key in CommittedKeys
+        const committedKeys = await getStore(this.userStore.committedKeys.subscribe);
+
+        // todo: throw error
+        if (committedKeys.find((x) => x.id == keyId) == null) return;
+    
+        // Depositing this key
+        await KeysService.depositKey(keyId);
+        await this.userStore.committedKeys.setKeyState(keyId, CommittedKeyState.DEPOSITED);
 
         // Refetching info about this key
         await KeysStore.refetchKey(keyId);
@@ -67,6 +90,7 @@ export class SelectedKeysStoreClass extends AbstractSharedStore<Array<SelectedKe
         const store = await getStore(this.subscribe);
         const key = store.find((x) => x.id == id);
 
+        // Checking if this key is available
         if (key != null) {
             switch (key.state) {
                 // Approving this key
@@ -89,23 +113,34 @@ export class SelectedKeysStoreClass extends AbstractSharedStore<Array<SelectedKe
                     break;
             };
         } else {
-            // Adding this key to our store
-            if (side == "admin") {
-                // Adding and committing this key
-                this.addKey(id, true, SelectedKeyState.CONFIRMATION_REQUIRED);
-
-                if (allowedKeys.find(x => x.keyId == id)?.isAllowed) {
-                    this.setKeyState(id, SelectedKeyState.COMMITTED);
-                    await this.commitKey(id);
+            // Checking if we can deposit this key
+            if (await KeysService.canDeposit(id)) {
+                // Checking if current user picked up this key
+                if (await KeysService.canDeposit(id)) {
+                    // Depositing this key
+                    await this.depositKey(id);
+                } else {
+                    // todo: notification?
                 };
             } else {
-                // Adding with { state: CONFIRMATION_REQUIRED }
-                // Checking if we have permissions for this key
-                if (allowedKeys.find(x => x.keyId == id)?.isAllowed) {
+                // Adding this key to our store
+                if (side == "admin") {
+                    // Adding and committing this key
                     this.addKey(id, true, SelectedKeyState.CONFIRMATION_REQUIRED);
+
+                    if (allowedKeys.find(x => x.keyId == id)?.isAllowed) {
+                        this.setKeyState(id, SelectedKeyState.COMMITTED);
+                        await this.commitKey(id);
+                    };
                 } else {
-                    // todo: send notification to guest side
-                }
+                    // Adding with { state: CONFIRMATION_REQUIRED }
+                    // Checking if we have permissions for this key
+                    if (allowedKeys.find(x => x.keyId == id)?.isAllowed) {
+                        this.addKey(id, true, SelectedKeyState.CONFIRMATION_REQUIRED);
+                    } else {
+                        // todo: send notification to guest side
+                    }
+                };
             };
         };
     };

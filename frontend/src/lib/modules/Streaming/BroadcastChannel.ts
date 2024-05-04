@@ -1,0 +1,1 @@
+export const StreamingChannel = new BroadcastChannel("streaming");

@@ -23,4 +23,9 @@ export class SocketCommandsService {
             cardId: id,
         });
     };
+
+    // Video
+    public sendVideoFrame(frame: string) {
+        this.eventsService.events.emit('stream', frame);
+    };
 };

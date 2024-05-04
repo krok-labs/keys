@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { KeysStore } from "$lib/modules";
+    import { CommittedKeyState, KeysStore, type CommittedKey } from "$lib/modules";
     import moment from "moment";
     import "moment-timezone";
 
-    $: key = $KeysStore.find((x) => x.id == keyId);
+    $: key = $KeysStore.find((x) => x.id == committedKey.id);
     $: contracts = key?.contracts ?? [];
     $: pickedUpAt = contracts[0]?.pickedUpAt == null ? null : moment(contracts[0]?.pickedUpAt).tz("Europe/Kyiv");
 
-    export let keyId: number;
+    export let committedKey: CommittedKey;
     export let size: "w-1/6" | "w-1/4" | "w-1/3" = "w-1/6";
 </script>
 
@@ -15,10 +15,17 @@
     <div class="h-full flex flex-col bg-white rounded-xl py-4 px-6 relative">
         <!-- Header -->
         <section class="w-full flex items-center mb-4 flex-wrap gap-2">
-            <!-- Badge -->
-            <span class="rounded-full px-3 py-1 bg-gray-300 text-white text-xs">
-                Виданий раніше
-            </span>
+            { #if committedKey.state == CommittedKeyState.DEPOSITED }
+                <!-- Badge -->
+                <span class="rounded-full px-3 py-1 bg-green-500 text-white text-xs">
+                    Повернений
+                </span>
+            { :else }
+                <!-- Badge -->
+                <span class="rounded-full px-3 py-1 bg-gray-300 text-white text-xs">
+                    Виданий раніше
+                </span>
+            { /if }
         </section>
 
         <!-- Text -->
