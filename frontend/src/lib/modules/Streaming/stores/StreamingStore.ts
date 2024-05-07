@@ -7,13 +7,14 @@ interface StreamingStoreInterface {
     role: "document_scanner" | "face_scanner";
 };
 
-type ListenerHandler = (frame: Buffer) => void;
+type ListenerHandler = (frame: string) => void;
 
 class StreamingStoreClass {
     public subscribe;
     protected update;
 
-    private listeners: Array<ListenerHandler> = [];
+    private latestListenerId = -1;
+    private listeners: Map<number, ListenerHandler> = new Map();
     private side: "admin" | "guest" = "admin";
 
     constructor() {
@@ -42,10 +43,10 @@ class StreamingStoreClass {
         // todo: implement
     };
 
-    handleFrame(frame: Buffer) {
+    handleFrame(frame: string) {
         // Sharing this frame with our listeners
-        for (const listener of this.listeners) {
-            listener(frame);
+        for (const [ id, handler ] of this.listeners) {
+            handler(frame);
         };
 
         if (this.side == "admin") {
@@ -54,12 +55,19 @@ class StreamingStoreClass {
         };
     };
 
-    public onFrame(handler: ListenerHandler) {
-        this.listeners.push(handler);
+    public onFrame(handler: ListenerHandler): number {
+        this.latestListenerId++;
+        this.listeners.set(this.latestListenerId, handler);
+        
+        return this.latestListenerId;
     };
 
+    public removeListener(id: number) {
+        this.listeners.delete(id);
+    }
+
     public removeAllListeners() {
-        this.listeners = [];
+        this.listeners.clear();
     }
 };
 

@@ -1,8 +1,7 @@
 <script type="ts">
     import { goto } from '$app/navigation';
     import { Button } from '$lib/components';
-    import { onMount } from 'svelte';
-    import { SynchronizationStore, SynchronizationState } from '$lib/modules';
+    import { SynchronizationStore, SynchronizationState, ApplicationStateStore } from '$lib/modules';
 
     import SolarKeyBold from '~icons/solar/key-bold';
     import SolarAddSquareBroken from '~icons/solar/add-square-broken';
@@ -18,7 +17,7 @@
     let headerComponentHeight;
 </script>
 
-<main class="w-full h-full bg-gray-100">
+<main class="w-full h-full bg-gray-100 relative">
     { #if $SynchronizationStore.state != SynchronizationState.CONNECTED }
         <div class="w-full h-screen flex flex-col items-center justify-center">
             <SolarCloudCrossLinear class="w-8 h-8" />
@@ -32,7 +31,7 @@
         </div>
     { :else }
         <!-- Header -->
-        <header bind:clientHeight={headerComponentHeight} class="fixed z-30 w-full bg-white p-3 px-6 flex items-center">
+        <header bind:clientHeight={headerComponentHeight} id="header" class="fixed z-30 w-full bg-white p-3 px-6 flex items-center">
             <!-- Logotype -->
             <div class="w-1/3">
                 <button on:click={() => {
@@ -45,11 +44,11 @@
             <!-- Service select -->
             <div class="w-1/3 flex justify-center gap-6">
                 <Button on:click={() => {
-                    goto(`/app/${side}/keys`);
+                    ApplicationStateStore.changeApplication('keys');
                 }} icon={SolarAddSquareBroken} text="Видача ключей" color={ selectedApp == "keys" ? "blue" : "gray" } />
         
                 <Button on:click={() => {
-                    goto(`/app/${side}/cards`);
+                    ApplicationStateStore.changeApplication('cards');
                 }} icon={SolarCardOutline} text="Тимчасові картки" color={ selectedApp == "cards" ? "blue" : "gray" } />
             </div>
         

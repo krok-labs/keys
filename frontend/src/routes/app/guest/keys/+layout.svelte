@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { UserStore, WorkerConnectionStore, ApplicationStateStore, SynchronizationStore, SynchronizationState, KeysStore } from "$lib/modules";
+    import { SynchronizationStore, SynchronizationState, KeysStore, UserStore } from "$lib/modules";
     import { onDestroy, onMount } from "svelte";
     import { Circle } from "svelte-loading-spinners";
 
     let isLoading = true;
 
-    const STORES = [WorkerConnectionStore, ApplicationStateStore];
+    const STORES = [UserStore, KeysStore];
 
     onMount(async () => {
         // Initializing admin stores

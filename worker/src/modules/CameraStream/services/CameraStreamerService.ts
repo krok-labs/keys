@@ -44,6 +44,9 @@ export class CameraStreamerService implements OnApplicationBootstrap {
             "-f", "dshow", 
             "-i", `video=${this.currentCamera.name}`,
             "-f", "mjpeg",
+            "-vb", "5M",
+            "-preset", "ultrafast", 
+            '-acodec', 'copy',
             "pipe:1"
         ]);
 
@@ -52,7 +55,7 @@ export class CameraStreamerService implements OnApplicationBootstrap {
         // Adding listeners to this process
         this.streamerProcess.stdout.on('data', (frame) => {
             // Sending this frame
-            this.socketCommandsService.sendVideoFrame(Buffer.from(frame).toString('base64'));
+            this.socketCommandsService.sendVideoFrame("data:image/jpeg;base64," + Buffer.from(frame).toString('base64'));
         });
 
         this.streamerProcess.on('close', (code) => {

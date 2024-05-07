@@ -39,10 +39,11 @@
   export let color: "blue" | "gray" | "light-gray" | "light" | "transparent" | "red" = "gray";
   export let icon: any;
   export let text: string;
+  export let disabled = false;
   export { classes as class };
 </script>
 
-<button on:click class="{ classes } {getBackgroundColor()} {getTextColor()} rounded-xl py-3 px-7 flex items-center justify-center gap-2 transition duration-200">
+<button on:click {disabled} class="{ classes } {getBackgroundColor()} {getTextColor()} {disabled ? "opacity-60 cursor-not-allowed" : ""} rounded-xl py-3 px-7 flex items-center justify-center gap-2 transition duration-200">
   <svelte:component this={icon} />
   <p>{text}</p>
 </button>

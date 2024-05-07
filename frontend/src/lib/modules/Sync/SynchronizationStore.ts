@@ -1,6 +1,6 @@
 import { EventHandler, EventType } from "$lib/types";
 import { writable } from "svelte/store";
-import { HeartbeatEvent, RoleSelectedEvent, StoreUpdateEvent } from "./events";
+import { ChangeApplicationEvent, HeartbeatEvent, RoleSelectedEvent, StoreUpdateEvent } from "./events";
 import { SynchronizationState } from "./types";
 
 const EVENTS_MAP: Map<EventType, EventHandler<any>> = new Map();
@@ -43,7 +43,8 @@ class SynchronizationStoreClass {
     public initialize() {
         EVENTS_MAP.set(EventType.HEARTBEAT, HeartbeatEvent);
         EVENTS_MAP.set(EventType.ROLE_SELECTED, RoleSelectedEvent);
-        EVENTS_MAP.set(EventType.STORE_UPDATE, StoreUpdateEvent);        
+        EVENTS_MAP.set(EventType.STORE_UPDATE, StoreUpdateEvent);
+        EVENTS_MAP.set(EventType.CHANGE_APPLICATION, ChangeApplicationEvent);
 
         // Subscribing to events on this channel
         this.channel.addEventListener('message', (event) => {
