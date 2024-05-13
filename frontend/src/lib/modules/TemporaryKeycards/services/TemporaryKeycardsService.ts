@@ -9,16 +9,27 @@ class TemporaryKeycardsServiceClass {
         return configuration.apiUrl;
     };
 
+    public async base64ToBlob(image: string): Promise<Blob> {
+        return new Promise((resolve) => {
+            fetch(image)
+                .then((res) => res.blob())
+                .then(blob => {
+                    resolve(blob);
+                    return;
+                });
+        });
+    };
+
     public async commitContract(faceImage: string, documentImage: string) {
         const formData = new FormData();
-        formData.append("faceImage", faceImage);
-        formData.append("documentImage", documentImage);
+        formData.append("faceImage", new File([await this.base64ToBlob(faceImage)], "faceImage.jpeg"));
+        formData.append("documentImage", new File([await this.base64ToBlob(documentImage)], "documentImage.jpeg"));
 
         return (await fetch(`${await this.getApiUrl()}/keycards/contract`, {
             method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
+            // headers: {
+            //     "Content-Type": "multipart/form-data",
+            // },
             body: formData,
         })).json();
     }

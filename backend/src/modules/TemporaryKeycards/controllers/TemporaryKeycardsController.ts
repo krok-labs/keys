@@ -22,7 +22,7 @@ export class TemporaryKeycardController implements TemporaryKeycardsControllerCo
         @UploadedFiles() files: { faceImage?: Express.Multer.File[], documentImage?: Express.Multer.File[] }
     ) {
         // Checking if we have every needed file
-        if (files.documentImage.length != 1 || files.faceImage.length != 1) {
+        if (files.documentImage?.length != 1 || files.faceImage?.length != 1) {
             throw new Error("Invalid files provided");
         };
 
