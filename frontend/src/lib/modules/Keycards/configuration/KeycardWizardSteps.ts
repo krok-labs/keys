@@ -5,17 +5,17 @@ export const KeycardWizardStepsArray: KeycardWizardStep[] = [
         id: 0,
         inputType: WizardInputType.IMAGE,
         title: "Фотографія обличчя",
-        content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum expedita, nostrum consequatur temporibus quibusdam minima quis nihil eveniet tempora praesentium.<br/><br/>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo provident cum voluptatibus explicabo totam laudantium commodi maxime eius excepturi? Ipsa repudiandae rerum debitis, libero magni asperiores ullam eos eum distinctio?<br/><br/>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae, magnam?",
+        content: "Нам потрібна фотографія Вашого обличчя. Тому, будь ласка, встаньте прямо, дивлячись на камеру на єкрані, та слухайте уважно, що Вам говорять охоронці.<br /><br />Після фотографії обличчя ми зробимо фотографію Ваших документів та видамо Вам тимчасову перепустку!",
     },
     {
         id: 1,
         inputType: WizardInputType.IMAGE,
         title: "Фотографія документів",
-        content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum expedita, nostrum consequatur temporibus quibusdam minima quis nihil eveniet tempora praesentium.<br/><br/>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo provident cum voluptatibus explicabo totam laudantium commodi maxime eius excepturi? Ipsa repudiandae rerum debitis, libero magni asperiores ullam eos eum distinctio?<br/><br/>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae, magnam?",
+        content: "Передайте охоронцям Ваш ідентифікаційний документ <i>(паспорт, водійське посвідчення та побідне)</i>. Ми зробимо його фотографію, збережемо в захищенній базі данних та видамо Вам нову тимчасову перепустку.",
     },
     {
         id: 2,
         title: "Видача перепустки",
-        content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum expedita, nostrum consequatur temporibus quibusdam minima quis nihil eveniet tempora praesentium.<br/><br/>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo provident cum voluptatibus explicabo totam laudantium commodi maxime eius excepturi? Ipsa repudiandae rerum debitis, libero magni asperiores ullam eos eum distinctio?<br/><br/>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae, magnam?",
+        content: "Будь ласка, перевірьте правильність всіх фотографій та данних.<br /><br />При натисканні на кнопку \"Продовжити\" ми збережемо ці фотографії в базі данних та видамо Вам нову тимчасову перепустку.",
     }
 ];
