@@ -10,16 +10,16 @@ class TemporaryKeycardsServiceClass {
     };
 
     public async commitContract(faceImage: string, documentImage: string) {
+        const formData = new FormData();
+        formData.append("faceImage", faceImage);
+        formData.append("documentImage", documentImage);
+
         return (await fetch(`${await this.getApiUrl()}/keycards/contract`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                // omg
-                faceImage,
-                documentImage,
-            }),
+            body: formData,
         })).json();
     }
 };

@@ -58,8 +58,8 @@ export type AllowedKeysModel = InferSelectModel<typeof allowedKeys>;
 
 // Temporary Keycards Schema
 export const temporaryKeycards = sqliteTable('temporary_keycards', {
-    documentsScan: blob('documents_scan_image').notNull(),
-    personScan: blob('person_scan_image'),
+    documentsImage: text('documents_scan_image').notNull(),
+    faceImage: text('person_scan_image').notNull(),
     createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 

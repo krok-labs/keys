@@ -28,8 +28,8 @@ CREATE TABLE `keys` (
 );
 --> statement-breakpoint
 CREATE TABLE `temporary_keycards` (
-	`documents_scan_image` blob NOT NULL,
-	`person_scan_image` blob,
+	`documents_scan_image` text NOT NULL,
+	`person_scan_image` text NOT NULL,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 --> statement-breakpoint

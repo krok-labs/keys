@@ -1,8 +1,9 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { TemporaryKeycardsControllerContract } from "../contracts";
-import { NewKecardContractPayload } from "../payloads";
 import { DrizzleDatabase } from "$backend/modules/Sources/services";
 import { temporaryKeycards } from "$backend/schema";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import multer from "multer";
 
 @Controller("/keycards")
 export class TemporaryKeycardController implements TemporaryKeycardsControllerContract {
@@ -11,16 +12,28 @@ export class TemporaryKeycardController implements TemporaryKeycardsControllerCo
     ) {}
     
     @Post("/contract")
+    @UseInterceptors(FileFieldsInterceptor([
+        { name: 'faceImage', maxCount: 1 },
+        { name: 'documentImage', maxCount: 1 },
+    ], {
+        dest: "./upload",
+    }))
     public async handleNewContract(
-        // omg
-        @Body() body: NewKecardContractPayload
+        @UploadedFiles() files: { faceImage?: Express.Multer.File[], documentImage?: Express.Multer.File[] }
     ) {
-        // omg x2
+        // Checking if we have every needed file
+        if (files.documentImage.length != 1 || files.faceImage.length != 1) {
+            throw new Error("Invalid files provided");
+        };
+
+        const faceImage = files["faceImage"][1];
+        const documentImage = files["documentImage"][1];
+
         return this.database.getInstance()
             .insert(temporaryKeycards)
             .values({
-                documentsScan: body.documentImage,
-                createdAt: body.faceImage,
+                documentsImage: documentImage.path,
+                faceImage: faceImage.path,
             })
             .returning();
     };
