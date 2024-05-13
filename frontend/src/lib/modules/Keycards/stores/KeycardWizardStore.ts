@@ -2,6 +2,9 @@ import { AbstractSharedStore, getStore } from "$lib/helpers";
 import { writable } from "svelte/store";
 import { type KeycardWizardStep } from "../types";
 import { KeycardWizardStepsArray } from "../configuration";
+import { WorkerConnectionStore } from "$lib/modules/Worker";
+import { ApplicationStateStore } from "$lib/modules/Application";
+import { TemporaryKeycardsService } from "$lib/modules/TemporaryKeycards";
 
 export interface KeycardWizardInterface {
     steps: KeycardWizardStep[],
@@ -22,11 +25,6 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
 
     protected readonly storeId = "keycard_wizard";
     
-    // Wizard inputs
-    protected documentsImage?: string;
-    protected faceImage?: string;
-    protected currentImage?: string;
-    
     constructor() {
         super();
 
@@ -40,6 +38,21 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
         this.update = update;
     }
 
+    public selectCamera(role: "face_scanner" | "document_scanner") {
+        console.log("Select camera");
+        WorkerConnectionStore.send(role, "selectCamera");
+        WorkerConnectionStore.send("camera_stream", "subscribe");
+    };
+
+    public stopStreaming() {
+        WorkerConnectionStore.send(undefined, "stopStreaming");
+        WorkerConnectionStore.send("camera_stream", "unsubscribe");
+    }
+
+    public runAfterDispose(): void {
+        this.stopStreaming();
+    }
+
     public clear() {
         this.update(() => ({
             currentStepId: 0,
@@ -51,7 +64,12 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
 
     // Events
     public async onFinish() {
-        console.log('on finish');
+        const store = await getStore(this.subscribe);
+
+        // Sending this images to backend
+        await TemporaryKeycardsService.commitContract(store.faceImage!, store.documentsImage!);
+
+        ApplicationStateStore.changeApplication('dashboard');
     };
 
     // Handle Scanned Image
@@ -96,6 +114,15 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
 
             // Moving to next step
             this.update((store) => {
+                // First step (document scanner)
+                if (store.currentStepId + 1 == 1) {
+                    this.selectCamera('document_scanner');
+                }
+
+                if (store.currentStepId + 1 == 2) {
+                    this.stopStreaming();
+                }
+
                 return {
                     ...store,
                     currentStepId: store.currentStepId + 1,
@@ -104,6 +131,8 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
                     ...(store.currentStepId + 1) == 2 ? { isNextStepAvailable: true } : {}
                 };
             });
+
+            this.syncUpdates();
         };
     };
 

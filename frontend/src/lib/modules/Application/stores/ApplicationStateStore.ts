@@ -35,7 +35,7 @@ class ApplicationStateStoreClass extends AbstractSharedStore<ApplicationStateInt
         this.syncUpdates();
     };
 
-    public async changeApplication(app: "cards" | "keys") {
+    public async changeApplication(app: "dashboard" | "cards" | "keys") {
         // Getting current app side 
         ChangeApplicationEvent.invoke({ app });
     };

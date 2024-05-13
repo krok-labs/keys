@@ -72,11 +72,14 @@ export abstract class AbstractSharedStore<T> {
     //     this.runAfterInitialization();
     // }
 
+    public runAfterDispose() {};
     public runAfterInitialization() {};
     public clear() {};
 
     public async dispose() {
         // Clearing this store
         this.clear();
+
+        this.runAfterDispose();
     };
 };

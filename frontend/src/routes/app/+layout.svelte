@@ -3,6 +3,8 @@
     import { Button } from '$lib/components';
     import { SynchronizationStore, SynchronizationState, ApplicationStateStore, ApplicationConfigurationStore } from '$lib/modules';
 
+    import KrokLogo from '$lib/assets/krok-logo.png';
+
     import SolarSettingsLinear from '~icons/solar/settings-linear';
     import SolarKeyBold from '~icons/solar/key-bold';
     import SolarAddSquareBroken from '~icons/solar/add-square-broken';
@@ -49,9 +51,9 @@
             <!-- Logotype -->
             <div class="w-1/3">
                 <button on:click={() => {
-                    goto('/app');
+                    ApplicationStateStore.changeApplication("dashboard");
                 }} class="p-2 rounded-md">
-                    <SolarKeyBold class="w-7 h-7" />
+                    <img src={KrokLogo} alt="Логотип КРОКу" class="h-9" />
                 </button>
             </div>
 

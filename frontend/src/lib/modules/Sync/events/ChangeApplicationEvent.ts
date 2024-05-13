@@ -5,7 +5,7 @@ import { EventHandler, EventType } from "$lib/types";
 import { SynchronizationStore } from "../SynchronizationStore";
 
 interface ChangeApplicationEventPayload {
-    app: "keys" | "cards"
+    app: "dashboard" | "keys" | "cards"
 };
 
 class ChangeApplicationEventClass implements EventHandler<ChangeApplicationEventPayload> {

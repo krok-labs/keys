@@ -1,5 +1,7 @@
-import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
+import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { CameraRole } from "../types";
+import { spawn } from "child_process";
+const ffmpeg = require("@ffmpeg-installer/ffmpeg");
 
 export interface CameraEntry {
     id: number,
@@ -8,8 +10,18 @@ export interface CameraEntry {
 
 @Injectable()
 export class CameraListService implements OnApplicationBootstrap {
+    private readonly logger = new Logger(CameraListService.name);
+
     onApplicationBootstrap() {
         // todo: get list of all available cameras
+        this.logger.debug(`Spawning new streaming process with ffmpeg configuration: ${JSON.stringify(ffmpeg)}`);
+        const process = spawn(ffmpeg.path, [
+            "-list_devices", "true", "-f", "dshow", "-i", "dummy"
+        ]);
+
+        process.stderr.on('data', (data) => {
+            console.log('stderr:', Buffer.from(data).toString('ascii'));
+        });
     }
 
     private readonly cameras: Record<CameraRole, CameraEntry> = {

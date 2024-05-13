@@ -1,3 +1,3 @@
 export enum SocketClientSubscriptions {
-    CAMERA_STREAM
+    CAMERA_STREAM = "camera_stream",
 };

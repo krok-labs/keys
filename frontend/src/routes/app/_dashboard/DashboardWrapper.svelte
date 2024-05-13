@@ -11,23 +11,25 @@
     const cards = [
         {
             type: "app-big",
-            app: "keys",
-            size: "w-2/6",
-
-            icon: SolarKeyBold,
-            iconColor: "text-purple-500",
-            title: "Видача ключей",
-            description: "Електронна видача ключей, перегляд журналу та подібні інші функції.",
-        },
-        {
-            type: "app-big",
             app: "cards",
             size: "w-2/6",
+            isAvailable: true,
 
             icon: SolarCard2Broken,
             iconColor: "text-orange-500",
             title: "Тимчасові перепустки",
             description: "Немає перепустки? Не проблема - в данному сервіси Ви просто зможете створити тимчасову перепустку.",
+        },
+        {
+            type: "app-big",
+            app: "keys",
+            size: "w-2/6",
+            isAvailable: false,
+
+            icon: SolarKeyBold,
+            iconColor: "text-purple-500",
+            title: "Видача ключей",
+            description: "Електронна видача ключей, перегляд журналу та подібні інші функції.",
         },
         {
             type: "static",
@@ -46,16 +48,16 @@
 
 <div class="absolute overflow-hidden top-0 w-full h-screen flex bg-gray-100" style="padding-top: {header?.clientHeight}px;">
     <!-- Cards -->
-    <section class="w-full h-min flex flex-wrap p-4">
+    <section class="w-full h-min flex flex-wrap items-center justify-start p-4">
         <!-- Keys -->
         { #each cards as card }
             <div class="{ card.size } h-52 relative p-3">
                 <button on:click={() => {
-                    if (card.app != null) {
+                    if (card.app != null && card.isAvailable) {
                         // @ts-ignore
                         ApplicationStateStore.changeApplication(card.app);
                     }
-                }} class="text-left flex flex-col justify-start h-full rounded-xl bg-white shadow-2xl p-4">
+                }} class="text-left flex flex-col justify-start w-full h-full rounded-xl active:bg-gray-100 bg-white { card.isAvailable ?? true ? "" : "opacity-40" } shadow-2xl p-4">
                     <!-- Static card -->
                     { #if card.type == "static" }
                         <div class="w-full h-full flex items-center justify-center p-2">
@@ -81,6 +83,14 @@
                         </div>
 
                         <p class="text-base text-gray-700">{ card.description }</p>
+                    { /if }
+
+                    { #if !(card.isAvailable ?? true) }
+                        <div class="flex-grow flex items-end">
+                            <div class="rounded-full bg-red-500 px-4 py-1.5">
+                                <p class="text-sm text-white">В розробці</p>
+                            </div>
+                        </div>
                     { /if }
                 </button>
             </div>

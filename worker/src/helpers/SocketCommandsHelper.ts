@@ -18,7 +18,11 @@ export const SocketCommandsHelper = {
     },
 
     selectCamera(bus: EventEmitter, role: CameraRole) {
-        console.log('cam', role);
+        bus.emit('selectCamera', role);
+    },
+
+    stopStreaming(bus: EventEmitter) {
+        bus.emit('stopStreaming');
     },
 
     sendStreamFrame(bus: EventEmitter, frame: any) {

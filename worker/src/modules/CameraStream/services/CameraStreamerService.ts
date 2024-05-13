@@ -16,14 +16,25 @@ export class CameraStreamerService implements OnApplicationBootstrap {
     private readonly logger = new Logger(CameraStreamerService.name);
 
     // Current streamer state
-    private state: 'ERROR' | 'STREAMING' | 'IDLE' = 'IDLE';
     private currentCamera?: CameraEntry;
     private streamerProcess?: ChildProcess;
 
     onApplicationBootstrap() {
-        // todo: remove
-        //       @huskie this is only for testing 
-        this.stream(CameraRole.DOCUMENT_SCANNER);
+        this.eventBus.instance.on('selectCamera', (role: CameraRole) => {
+            this.stream(role);
+        });
+
+        this.eventBus.instance.on('stopStreaming', () => {
+            this.stop();
+        });
+    };
+
+    public async stop() {
+        if (this.streamerProcess != null) {
+            this.logger.warn('Stopping previous camera stream process');
+            this.streamerProcess.removeAllListeners();
+            this.streamerProcess.kill();
+        };
     };
 
     // Stream camera
@@ -33,11 +44,7 @@ export class CameraStreamerService implements OnApplicationBootstrap {
         this.logger.warn(`Received stream request for camera ${JSON.stringify(this.currentCamera)}`);
 
         // Stopping previos stream (if exists)
-        if (this.state == 'STREAMING' || (this.streamerProcess != null && this.streamerProcess.connected)) {
-            this.logger.warn('Stopping previous camera stream process');
-            this.streamerProcess.removeAllListeners();
-            this.streamerProcess.kill();
-        };
+        await this.stop();
 
         // Starting new streamer process
         this.logger.debug(`Spawning new streaming process with ffmpeg configuration: ${JSON.stringify(ffmpeg)}`);
@@ -51,8 +58,6 @@ export class CameraStreamerService implements OnApplicationBootstrap {
             "pipe:1"
         ]);
 
-        this.state = 'STREAMING';
-
         // Adding listeners to this process
         this.streamerProcess.stdout.on('data', (frame) => {
             // Sending this frame
@@ -61,7 +66,6 @@ export class CameraStreamerService implements OnApplicationBootstrap {
 
         this.streamerProcess.on('close', (code) => {
             this.logger.warn('Streaming process stopped. Code: ', code);
-            this.state = 'ERROR';
         });
     };
 };

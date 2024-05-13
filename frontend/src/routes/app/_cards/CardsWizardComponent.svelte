@@ -12,6 +12,7 @@
 
     import { KeycardWizardStore } from "$lib/modules/Keycards";
     import { WizardInputType } from "$lib/modules/Keycards/types";
+    import { ApplicationStateStore } from "$lib/modules";
 
     let header: HTMLElement | null;
 
@@ -20,6 +21,7 @@
 
     onMount(() => {
         header = document.getElementById("header");
+        KeycardWizardStore.selectCamera('face_scanner');
     });
 
     export let side: "admin" | "guest";
@@ -62,7 +64,7 @@
         </section>
         
         <!-- Instructions -->
-        <section class="p-12 flex-grow">
+        <section class="p-12 flex-grow overflow-auto">
             <h1 class="text-4xl text-black font-bold">{ currentStep?.title }</h1>
             <p class="mt-4 text-md text-gray-700">{ @html currentStep?.content }</p>
         </section>
@@ -71,7 +73,9 @@
         { #if side == "admin" }
             <section class="p-12 gap-6 flex items-center justify-center">
                 <!-- Cancel -->
-                <Button color="red" text="Відминити" icon={SolarCloseCircleLinear} />
+                <Button on:click={() => {
+                    ApplicationStateStore.changeApplication('dashboard');
+                }} color="red" text="Відминити" icon={SolarCloseCircleLinear} />
 
                 { #if currentStep?.inputType == WizardInputType.IMAGE }
                     <!-- Make a photo -->
@@ -89,7 +93,7 @@
     <!-- Camera Feed -->
     { #if $KeycardWizardStore.currentStepId == 2 }
         <!-- Showing images -->
-        <div class="w-2/3 py-6 h-full px-20 flex items-center justify-center gap-8 overflow-auto">
+        <div class="w-2/3 py-6 h-full px-20 flex items-center justify-center gap-8 relative overflow-auto">
             { #each [
                 {
                     image: $KeycardWizardStore.documentsImage, 

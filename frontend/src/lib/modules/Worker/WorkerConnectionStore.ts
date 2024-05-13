@@ -35,7 +35,14 @@ class WorkerConnectionStoreClass {
         });
     };
 
-    public async dispose() {};
+    public async send(message: any, eventName = "message") {
+        console.log("send message:", message, eventName);
+        this.client?.emit(eventName, message);
+    };
+
+    public async dispose() {
+        this.client?.disconnect();
+    };
 };
 
 export const WorkerConnectionStore = new WorkerConnectionStoreClass();

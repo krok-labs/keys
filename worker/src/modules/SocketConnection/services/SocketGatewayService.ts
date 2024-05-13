@@ -69,14 +69,14 @@ export class SocketGatewayService implements OnGatewayConnection {
 
     @SubscribeMessage('subscribe')
     async handleSubscription(client: Socket, data: SocketClientSubscriptions) {
-        if (!Object.keys(SocketClientSubscriptions).includes(data as any)) {
+        if (!Object.values(SocketClientSubscriptions).includes(data as any)) {
             throw new WsException(`Invalid subscription [${data}] in subscribe command`);
         };
 
         // Adding this subscription to our client
         let clientEntry = this.clientsMap.get(client.id);
         if (clientEntry == null) throw new WsException(`Could not find this client: ${client.id} in client list`);
-    
+
         // Checking if this client is already subscribed
         if (!clientEntry.subscriptions.includes(data)) {
             // Subscribing this client
@@ -89,16 +89,16 @@ export class SocketGatewayService implements OnGatewayConnection {
 
     @SubscribeMessage('unsubscribe')
     async handleUnsubscribe(client: Socket, data: SocketClientSubscriptions) {
-        if (!Object.keys(SocketClientSubscriptions).includes(data as any)) {
+        if (!Object.values(SocketClientSubscriptions).includes(data as any)) {
             throw new WsException(`Invalid subscription [${data}] in unsubscribe command`);
         };
 
         // Adding this subscription to our client
         let clientEntry = this.clientsMap.get(client.id);
         if (clientEntry == null) throw new WsException(`Could not find this client: ${client.id} in client list`);
-    
+
         // Checking if this client is subscribed
-        if (clientEntry.subscriptions.includes) {
+        if (clientEntry.subscriptions.includes(data)) {
             // Unsubscribing this client
             clientEntry.subscriptions = clientEntry.subscriptions.filter((x) => x != data);
         };
@@ -109,11 +109,17 @@ export class SocketGatewayService implements OnGatewayConnection {
 
     @SubscribeMessage('selectCamera')
     async handleSelectCamera(client: Socket, data: CameraRole) {
-        if (!Object.keys(CameraRole).includes(data)) {
+        if (!Object.values(CameraRole).includes(data)) {
             throw new WsException(`Invalid camera role [${data}] in selectCamera command`);
         };
 
         // Asking our CameraModule to stream different camera
         SocketCommandsHelper.selectCamera(this.eventBus.instance, data);
+    };
+
+    @SubscribeMessage('stopStreaming')
+    async handleStopStreaming(client: Socket) {
+        // Asking our CameraModule to stream different camera
+        SocketCommandsHelper.stopStreaming(this.eventBus.instance);
     };
 };
