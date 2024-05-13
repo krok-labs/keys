@@ -84,7 +84,6 @@ export class SynchronizationGatewayService implements OnGatewayInit, OnGatewayCo
     ) {
         // Finding this client and it's session declaration
         for (const [sessionKey, declaration] of this.declarations.entries()) {
-            console.log("")
             if (declaration.admin == client.id || declaration.guest == client.id) {
                 // Sending this event
                 const side = declaration.admin == client.id ? "admin" : "guest";
