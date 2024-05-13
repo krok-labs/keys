@@ -1,17 +1,22 @@
 import { Controller, Get, Param, ParseIntPipe } from "@nestjs/common";
-import { SocketCommandsService } from "src/modules/SocketConnection/services";
+import { EventBusService } from "src/modules/EventBus/services";
 
 @Controller('/mock')
 export class MockController {
     constructor(
-        private readonly commandsService: SocketCommandsService,
+        private readonly eventBus: EventBusService,
     ) {}
     
     @Get('/:id')
     public emulateKeycard(
         @Param('id', ParseIntPipe) id: number
     ) {
-        this.commandsService.sendCardId(id);
+        this.eventBus.instance.emit('message', {
+            // todo: create shared enum
+            type: "cardId",
+            cardId: id,
+        });
+        
         return true;
     };
 };

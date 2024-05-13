@@ -27,10 +27,15 @@ export class CommittedKeysStoreClass extends AbstractSharedStore<CommittedKeysSt
 
         this.userStore = userStore;
 
-        const { subscribe, update } = writable<CommittedKeysStoreInterface>();
+        const { subscribe, update } = writable<CommittedKeysStoreInterface>([]);
 
         this.subscribe = subscribe;
         this.update = update;
+    }
+
+    public clear() {
+        this.update(() => ([]));
+        this.syncUpdates();
     }
 
     public async fetch() {
@@ -47,12 +52,16 @@ export class CommittedKeysStoreClass extends AbstractSharedStore<CommittedKeysSt
                 state: CommittedKeyState.CURRENTLY_HOLDING,
             }))
         ));
+
+        this.syncUpdates();
     };
 
     public async removeIfNeeded(keyId: number) {
         this.update((store) => (
             store.filter((x) => x.id != keyId)
         ));
+
+        this.syncUpdates();
     }
 
     public async setKeyState(keyId: number, state: CommittedKeyState) {
@@ -71,5 +80,7 @@ export class CommittedKeysStoreClass extends AbstractSharedStore<CommittedKeysSt
                 },
             ];
         });
+
+        this.syncUpdates();
     }
 };

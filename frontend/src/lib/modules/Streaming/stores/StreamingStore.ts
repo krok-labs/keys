@@ -1,6 +1,7 @@
 import { AbstractSharedStore } from "$lib/helpers";
 import { writable } from "svelte/store";
 import { StreamingChannel } from "../BroadcastChannel";
+import { StreamingFrameEvent } from "$lib/modules/Sync";
 
 interface StreamingStoreInterface {
     // todo: move to shared types
@@ -31,9 +32,6 @@ class StreamingStoreClass {
         console.debug('[StreamingStore.initialize] Subscribing to StreamingChannel updates as guest');
 
         this.side = "guest";
-
-        // Listening to our StreamingChannel for new frames
-        StreamingChannel.addEventListener('message', (event) => this.handleFrame(event.data));
     }
 
     public async dispose() {};
@@ -51,7 +49,7 @@ class StreamingStoreClass {
 
         if (this.side == "admin") {
             // Sharing this frame with guest side
-            StreamingChannel.postMessage(frame);
+            StreamingFrameEvent.invoke({ frame });
         };
     };
 

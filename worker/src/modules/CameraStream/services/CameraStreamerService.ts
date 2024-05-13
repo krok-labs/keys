@@ -1,15 +1,16 @@
-import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
-import { SocketCommandsService } from "src/modules/SocketConnection/services";
+import { Inject, Injectable, Logger, OnApplicationBootstrap, forwardRef } from "@nestjs/common";
 import { CameraEntry, CameraListService } from "./CameraListService";
 import { CameraRole } from "../types";
 import { ChildProcess, spawn } from "child_process";
+import { EventBusService } from "src/modules/EventBus/services";
+import { SocketCommandsHelper } from "src/helpers";
 const ffmpeg = require("@ffmpeg-installer/ffmpeg");
 
 @Injectable()
 export class CameraStreamerService implements OnApplicationBootstrap {
     constructor(
+        private readonly eventBus: EventBusService,
         private readonly cameraListService: CameraListService,
-        private readonly socketCommandsService: SocketCommandsService
     ) {}
 
     private readonly logger = new Logger(CameraStreamerService.name);
@@ -55,7 +56,7 @@ export class CameraStreamerService implements OnApplicationBootstrap {
         // Adding listeners to this process
         this.streamerProcess.stdout.on('data', (frame) => {
             // Sending this frame
-            this.socketCommandsService.sendVideoFrame("data:image/jpeg;base64," + Buffer.from(frame).toString('base64'));
+            SocketCommandsHelper.sendStreamFrame(this.eventBus.instance, frame);
         });
 
         this.streamerProcess.on('close', (code) => {

@@ -26,6 +26,12 @@ class UserStoreClass extends AbstractSharedStore<UserStoreInterface> {
         this.update = update;
     };
 
+    public clear() {
+        // @ts-ignore
+        this.update(() => (undefined));
+        this.syncUpdates();
+    }
+
     public async setUser(user: UserInterface) {
         this.update(() => {
             return {
@@ -33,6 +39,8 @@ class UserStoreClass extends AbstractSharedStore<UserStoreInterface> {
                 badges: [String(user.jobTitle), String(user.officeLocation), String(user.userPrincipalName)],
             };
         });
+
+        this.syncUpdates();
 
         // Clearing all store
         this.selectedKeys.clear();

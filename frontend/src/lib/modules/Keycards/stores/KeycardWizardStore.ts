@@ -40,6 +40,15 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
         this.update = update;
     }
 
+    public clear() {
+        this.update(() => ({
+            currentStepId: 0,
+            steps: KeycardWizardStepsArray,
+            isNextStepAvailable: false,
+        }));
+        this.syncUpdates();
+    };
+
     // Events
     public async onFinish() {
         console.log('on finish');
@@ -105,6 +114,8 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
                 ...opts,
             };
         });
+
+        this.syncUpdates();
     };
 
     private setIsNextStateAvailable(isAvailable: boolean) {
@@ -114,6 +125,8 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
                 isNextStepAvailable: isAvailable
             };
         });
+
+        this.syncUpdates();
     };
 
     private async getCurrentStep() {

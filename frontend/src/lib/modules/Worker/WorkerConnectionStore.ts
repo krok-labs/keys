@@ -1,17 +1,17 @@
-import { ApplicationConfiguration } from "$lib/config";
-import { io } from "socket.io-client";
+import { Socket, io } from "socket.io-client";
 import { CardIdEvent, ProcessingCardEvent } from "./events";
 import { StreamingStore } from "../Streaming";
+import { getStore } from "$lib/helpers";
+import { ApplicationConfigurationStore } from "../Application";
 
 class WorkerConnectionStoreClass {
-    private readonly client;
+    private client?: Socket;
     
-    constructor() {
-        this.client = io(ApplicationConfiguration.workerUrl, { autoConnect: false });
-    };
+    constructor() {};
 
     public async initialize() {
-        this.client.connect();
+        const configuration = await getStore(ApplicationConfigurationStore.subscribe);
+        this.client = io(configuration.workerUrl);
 
         // Messages
         this.client.on('message', (message) => {

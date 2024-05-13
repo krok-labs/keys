@@ -149,6 +149,8 @@ export class SelectedKeysStoreClass extends AbstractSharedStore<Array<SelectedKe
         this.update((store) => {
             return store.filter(x => x.id != id);
         });
+
+        this.syncUpdates();
     };
 
     private addKey(id: number, isAllowed: boolean, state: SelectedKeyState) {
@@ -162,6 +164,8 @@ export class SelectedKeysStoreClass extends AbstractSharedStore<Array<SelectedKe
                 },
             ];
         });
+
+        this.syncUpdates();
     };
 
     private async setKeyState(keyId: number, state: SelectedKeyState) {
@@ -181,11 +185,15 @@ export class SelectedKeysStoreClass extends AbstractSharedStore<Array<SelectedKe
                 },
             ];
         });
+
+        this.syncUpdates();
     }
 
     public clear() {
         this.update(() => {
             return [];
         });
+
+        this.syncUpdates();
     }
 };

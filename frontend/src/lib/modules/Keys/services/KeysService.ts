@@ -1,24 +1,31 @@
-import { ApplicationConfiguration } from "$lib/config";
 import { type AllowedKeysModel, type KeysModel } from "$backend/schema";
 import type { KeysControllerContract } from "$backend/modules/Keys/contracts";
 import { getStore } from "$lib/helpers";
 import { UserStore } from "$lib/modules/User";
 import type { CommitKeyPayload } from "$backend/modules/Keys/payloads";
 import { KeysStore } from "../stores";
+import { ApplicationConfigurationStore } from "$lib/modules/Application";
 
 class KeysServiceClass {
+    private async getApiUrl(): Promise<string> {
+        const configuration = await getStore(ApplicationConfigurationStore.subscribe);
+        if (configuration == null) throw new Error("[KeysService.getApiUrl] Empty configuration");
+
+        return configuration.apiUrl;
+    };
+
     public async getAllKeys(): ReturnType<KeysControllerContract["getAllKeys"]> {
         // todo: error handling
-        return (await fetch(`${ApplicationConfiguration.apiUrl}/keys`)).json();
+        return (await fetch(`${await this.getApiUrl()}/keys`)).json();
     };
 
     public async getAllowedKeys(aid: string): Promise<Array<AllowedKeysModel & { key: KeysModel }>> {
         // todo: error handling
-        return (await fetch(`${ApplicationConfiguration.apiUrl}/users/aid=${aid}/keys`)).json();
+        return (await fetch(`${await this.getApiUrl()}/users/aid=${aid}/keys`)).json();
     };
 
     public async getById(id: number): ReturnType<KeysControllerContract['getKey']> {
-        return (await fetch(`${ApplicationConfiguration.apiUrl}/keys/${id}`)).json();
+        return (await fetch(`${await this.getApiUrl()}/keys/${id}`)).json();
     };
 
     public async commitKey(id: number): ReturnType<KeysControllerContract['commitKey']> {
@@ -28,7 +35,7 @@ class KeysServiceClass {
         if (userStore == null) throw new Error("Invalid user");
     
         return (
-            await fetch(`${ApplicationConfiguration.apiUrl}/keys/${id}/commit`, {
+            await fetch(`${await this.getApiUrl()}/keys/${id}/commit`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -42,7 +49,7 @@ class KeysServiceClass {
 
     public async revokeCommit(commitId: number): ReturnType<KeysControllerContract['revokeCommit']> {
         return (
-            await fetch(`${ApplicationConfiguration.apiUrl}/keys/commits/${commitId}`, {
+            await fetch(`${await this.getApiUrl()}/keys/commits/${commitId}`, {
                 method: 'DELETE'
             })
         ).json();
@@ -50,7 +57,7 @@ class KeysServiceClass {
 
     public async depositKey(keyId: number) {
         return (
-            await fetch(`${ApplicationConfiguration.apiUrl}/keys/${keyId}/deposit`, {
+            await fetch(`${await this.getApiUrl()}/keys/${keyId}/deposit`, {
                 method: 'POST'
             })
         ).json();

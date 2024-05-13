@@ -1,12 +1,11 @@
 import { Module, forwardRef } from "@nestjs/common";
+import { EventBusModule } from "../EventBus/module";
 
 import * as Services from './services';
-import * as PrivateServices from './services/private';
-import { CameraModule } from "../CameraStream/module";
 
 @Module({
-  imports: [forwardRef(() => CameraModule)],
-  providers: [...Object.values(Services), ...Object.values(PrivateServices)],
+  imports: [EventBusModule],
+  providers: [...Object.values(Services)],
   exports: [...Object.values(Services)],
 })
 export class SocketConnectionModule {};

@@ -1,7 +1,10 @@
 import { EventHandler, EventType } from "$lib/types";
 import { writable } from "svelte/store";
-import { ChangeApplicationEvent, HeartbeatEvent, RoleSelectedEvent, StoreUpdateEvent } from "./events";
+import { ChangeApplicationEvent, RoleSelectedEvent, StreamingFrameEvent, SyncStoreEvent } from "./events";
 import { SynchronizationState } from "./types";
+import { Socket, io } from "socket.io-client";
+import { getStore } from "$lib/helpers";
+import { ApplicationConfigurationStore } from "../Application";
 
 const EVENTS_MAP: Map<EventType, EventHandler<any>> = new Map();
 
@@ -15,23 +18,19 @@ class SynchronizationStoreClass {
     public subscribe;
     private update;
 
-    public readonly clientId: string;
-    public readonly channel;
+    public channel?: Socket;
 
     constructor() {
         const { subscribe, update } = writable<SynchronizationStoreInterface>({
-            state: SynchronizationState.WAITING
+            state: SynchronizationState.DISCONNECTED
         });
 
         this.subscribe = subscribe;
         this.update = update;
-
-        this.channel = new BroadcastChannel("sync");
-        // urgh?
-        this.clientId = String(Math.floor(Math.random() * 10));
     }
 
     public setState(state: SynchronizationState) {
+        console.log("update state:", state);
         this.update((store) => {
             return {
                 ...store,
@@ -40,16 +39,32 @@ class SynchronizationStoreClass {
         });
     };
 
-    public initialize() {
-        EVENTS_MAP.set(EventType.HEARTBEAT, HeartbeatEvent);
+    public async initialize() {
+        const configuration = await getStore(ApplicationConfigurationStore.subscribe);
+        console.debug('[SynchronizationStore.initialize] Initializing synchronization store');
+
+        // Initializing our socket connection
+        this.channel = io(`${configuration.synchronizationUrl}`, {
+            query: {
+                sessionKey: configuration.sessionKey,
+                side: configuration.side,
+            },
+        });
+        this.channel.connect();
+
+        // Listeners
+        this.channel.on('connect_error', (err) => console.error(err));
+        this.channel.on('connect', () => this.setState(SynchronizationState.CONNECTED));
+        this.channel.on('disconnect', () => this.setState(SynchronizationState.DISCONNECTED));
+
+        // Events map
         EVENTS_MAP.set(EventType.ROLE_SELECTED, RoleSelectedEvent);
-        EVENTS_MAP.set(EventType.STORE_UPDATE, StoreUpdateEvent);
+        EVENTS_MAP.set(EventType.SYNC_STORE, SyncStoreEvent);
         EVENTS_MAP.set(EventType.CHANGE_APPLICATION, ChangeApplicationEvent);
+        EVENTS_MAP.set(EventType.STREAMING_FRAME, StreamingFrameEvent);
 
         // Subscribing to events on this channel
-        this.channel.addEventListener('message', (event) => {
-            const { data } = event;
-
+        this.channel.on('event', (data) => {
             if (data.type == null) throw new Error("Invalid synchronizer eventType");
             if (!Object.values(EventType).includes(data.type as any)) throw new Error(`Invalid eventType: ${data} from event: ${data}`);
 
@@ -57,11 +72,15 @@ class SynchronizationStoreClass {
             const handler = EVENTS_MAP.get(data.type as EventType)!;
             handler.handle(data as any, event as any);
         });
+    };
 
-        // Heartbeat Event
-        setInterval(() => {
-            HeartbeatEvent.invoke(this.channel, { client: this.clientId });
-        }, 500);
+    public async sendEvent(payload: any) {
+        this.channel?.emit('event', payload);
+    };
+    
+    public dispose() {
+        // todo: logic
+        this.channel?.disconnect();
     };
 };
 

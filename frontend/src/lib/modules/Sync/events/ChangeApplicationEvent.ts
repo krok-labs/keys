@@ -2,6 +2,7 @@ import { goto } from "$app/navigation";
 import { page } from "$app/stores";
 import { getStore } from "$lib/helpers";
 import { EventHandler, EventType } from "$lib/types";
+import { SynchronizationStore } from "../SynchronizationStore";
 
 interface ChangeApplicationEventPayload {
     app: "keys" | "cards"
@@ -16,11 +17,11 @@ class ChangeApplicationEventClass implements EventHandler<ChangeApplicationEvent
         goto(`/app/${side}/${data.app}`);
     };
 
-    async invoke(channel: BroadcastChannel, opts: ChangeApplicationEventPayload) {
-        channel.postMessage({
+    async invoke(opts: ChangeApplicationEventPayload) {
+        SynchronizationStore.sendEvent({
             type: EventType.CHANGE_APPLICATION,
             ...opts
-        });
+        })
 
         await this.handle(opts, undefined);
     };

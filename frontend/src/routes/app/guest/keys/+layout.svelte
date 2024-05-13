@@ -13,15 +13,6 @@
             await store.initialize();
         };
 
-        SynchronizationStore.subscribe((store) => {
-            if ([SynchronizationState.DISCONNECTED, SynchronizationState.TOO_MANY_CONNECTIONS].includes(store.state)) {
-                // Disposing of all stores
-                for (const store of STORES) {
-                    store.dispose();
-                };
-            };
-        });
-
         isLoading = false;
     });
 

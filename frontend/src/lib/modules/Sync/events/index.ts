@@ -1,4 +1,4 @@
-export * from './HeartbeatEvent';
 export * from './RoleSelectedEvent';
-export * from './StoreUpdateEvent';
 export * from './ChangeApplicationEvent';
+export * from './SyncStoreEvent';
+export * from './StreamingFrameEvent';

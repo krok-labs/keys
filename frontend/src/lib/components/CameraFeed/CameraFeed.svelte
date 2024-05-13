@@ -30,4 +30,4 @@
     export { classes as class };
 </script>
 
-<canvas bind:this={canvas} class="{classes} z-0" id="video" {width} {height}></canvas>
+<canvas bind:this={canvas} class="{classes} z-0 w-full h-full" id="video" {width} {height}></canvas>

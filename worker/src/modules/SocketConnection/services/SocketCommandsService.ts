@@ -1,15 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { SocketEventsService } from "./private";
+import { EventBusService } from "src/modules/EventBus/services";
 
 @Injectable()
 export class SocketCommandsService {
     constructor(
-        private readonly eventsService: SocketEventsService,
+        private readonly eventBus: EventBusService,
     ) {}
     
     // Send processing card event
     public sendProcessingCardEvent() {
-        this.eventsService.events.emit('message', {
+        this.eventBus.instance.emit('message', {
             // todo: create shared enum
             type: "processingCard"
         });
@@ -17,7 +17,7 @@ export class SocketCommandsService {
 
     // Send card id
     public sendCardId(id: number) {
-        this.eventsService.events.emit('message', {
+        this.eventBus.instance.emit('message', {
             // todo: create shared enum
             type: "cardId",
             cardId: id,
@@ -26,6 +26,6 @@ export class SocketCommandsService {
 
     // Video
     public sendVideoFrame(frame: string) {
-        this.eventsService.events.emit('stream', frame);
+        this.eventBus.instance.emit('stream', frame);
     };
 };

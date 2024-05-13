@@ -13,7 +13,7 @@
     export let size: "w-1/6" | "w-1/4" | "w-1/3" = "w-1/6";
 </script>
 
-<div class="{size} p-4">
+<div class="{size} p-2">
     <div class="h-full flex flex-col bg-white rounded-xl py-4 px-6 relative">
         <!-- Header -->
         <section class="w-full flex items-center mb-4 flex-wrap gap-2">
@@ -50,15 +50,15 @@
                 <div class="flex items-center bg-gray-100 rounded-2xl py-1.5 px-3">
                     <!-- Date information -->
                     <div class="ml-2">
-                        <h1 class="text-sm font-medium">Виданий { key?.contracts[0]?.pickedUpAt ?? "невідомо коли" }</h1>
+                        <h1 class="text-xs font-semibold">Виданий { key?.contracts[0]?.pickedUpAt ?? "невідомо коли" }</h1>
                     </div>
                 </div>
-            { :else if selectedKey.state == SelectedKeyState.CONFIRMATION_REQUIRED && side == "admin" }
+            { :else if selectedKey.state == SelectedKeyState.CONFIRMATION_REQUIRED }
                 <!-- Remove button -->
                 <Button on:click={() => {
                     // todo: check if this key is committed?
                     UserStore.selectedKeys.removeKey(selectedKey.id);
-                }} icon={SolarTrashBin2Linear} text="Видалити ключ" />
+                }} icon={SolarTrashBin2Linear} text="Видалити" />
             { /if }
         </section>
     </div>

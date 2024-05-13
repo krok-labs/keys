@@ -19,6 +19,11 @@ class KeysStoreClass extends AbstractSharedStore<KeysStoreInterface> {
         this.update = update;
     }
 
+    public clear() {
+        this.update(() => ([]));
+        this.syncUpdates();
+    };
+
     public async refetchKey(id: number) {
         // todo: refetch key individually
         await this.fetch();
@@ -29,6 +34,8 @@ class KeysStoreClass extends AbstractSharedStore<KeysStoreInterface> {
         this.update(() => {
             return keys;
         });
+        
+        this.syncUpdates();
     };
 
     public async getAll() {

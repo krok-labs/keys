@@ -11,8 +11,8 @@
 </script>
 
 { #if key != null && key.contracts?.length == 0 }
-    <div class="{size} p-4">
-        <div class="h-full bg-gray-50 opacity-80 rounded-xl py-4 px-6">
+    <div class="{size} p-2">
+        <div class="h-full flex flex-col bg-white opacity-80 rounded-xl py-4 px-6">
             <header class="w-full flex items-center mb-4">
                 <!-- Badge -->
                 <span class="rounded-full px-3 py-1 { allowedKey.isAllowed ? "bg-blue-500 text-white" : "bg-red-500 text-white" } text-xs">
@@ -21,8 +21,10 @@
             </header>
 
             <!-- Text -->
-            <p class="text-sm text-gray-800">{ key?.description }</p>
-            <h1 class="font-bold text-2xl">{ key?.title }</h1>
+            <div class="flex-grow">
+                <p class="text-sm text-gray-800">{ key?.description }</p>
+                <h1 class="font-bold text-2xl">{ key?.title }</h1>
+            </div>
 
             <!-- Add key button -->
             <Button on:click={() => {

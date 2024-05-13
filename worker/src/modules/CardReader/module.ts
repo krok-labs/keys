@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { CardReaderService } from "./CardReaderService";
-import { SocketConnectionModule } from "../SocketConnection/module";
+import { EventBusModule } from "../EventBus/module";
 
 @Module({
-  imports: [SocketConnectionModule],
+  imports: [EventBusModule],
   providers: [CardReaderService],
 })
 export class CardReaderModule {};

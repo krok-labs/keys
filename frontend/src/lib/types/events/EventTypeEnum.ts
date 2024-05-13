@@ -1,6 +1,6 @@
 export enum EventType {
-    HEARTBEAT = 'heartbeat',
     ROLE_SELECTED = 'role_selected',
-    STORE_UPDATE = 'store_update',
     CHANGE_APPLICATION = 'change_application',
+    SYNC_STORE = 'sync_store',
+    STREAMING_FRAME = 'streaming_frame',
 };

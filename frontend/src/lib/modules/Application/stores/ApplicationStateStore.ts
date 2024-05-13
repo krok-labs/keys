@@ -1,11 +1,9 @@
-import { ApplicationType } from "$lib/types";
 import { writable } from "svelte/store";
 import { AbstractSharedStore, getStore } from "$lib/helpers";
 import { ApplicationStateEnum } from "../types";
 import { ChangeApplicationEvent, SynchronizationStore } from "$lib/modules/Sync";
 
 interface ApplicationStateInterface {
-    type: ApplicationType.KEYS,
     state: ApplicationStateEnum,
 };
 
@@ -19,8 +17,7 @@ class ApplicationStateStoreClass extends AbstractSharedStore<ApplicationStateInt
         super();
 
         const { subscribe, update } = writable<ApplicationStateInterface>({
-            type: ApplicationType.KEYS,
-            state: ApplicationStateEnum.IDLE
+            state: ApplicationStateEnum.IDLE,
         });
 
         this.update = update;
@@ -34,12 +31,19 @@ class ApplicationStateStoreClass extends AbstractSharedStore<ApplicationStateInt
                 state
             };
         });
-    }
+
+        this.syncUpdates();
+    };
 
     public async changeApplication(app: "cards" | "keys") {
         // Getting current app side 
-        ChangeApplicationEvent.invoke(SynchronizationStore.channel, { app });
+        ChangeApplicationEvent.invoke({ app });
     };
+
+    public clear() {
+        this.update(() => ({ state: ApplicationStateEnum.IDLE }));
+        this.syncUpdates();
+    }
 };
 
 export const ApplicationStateStore = new ApplicationStateStoreClass();

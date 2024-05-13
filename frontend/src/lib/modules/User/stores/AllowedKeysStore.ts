@@ -35,11 +35,15 @@ export class AllowedKeysStoreClass extends AbstractSharedStore<Array<AllowedKey>
         this.update(() => {
             return allowedKeys ?? [];
         });
+
+        this.syncUpdates();
     };
 
     public clear() {
         this.update(() => {
             return [];
         });
+
+        this.syncUpdates();
     }
 };

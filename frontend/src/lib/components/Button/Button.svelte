@@ -45,5 +45,5 @@
 
 <button on:click {disabled} class="{ classes } {getBackgroundColor()} {getTextColor()} {disabled ? "opacity-60 cursor-not-allowed" : ""} rounded-xl py-3 px-7 flex items-center justify-center gap-2 transition duration-200">
   <svelte:component this={icon} />
-  <p>{text}</p>
+  <p class="text-sm">{text}</p>
 </button>

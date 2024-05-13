@@ -2,7 +2,8 @@ import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { SerialPort } from "serialport";
 import { SerialDeviceType, SerialPortDevice } from "./types";
 import { ReadlineParser } from "@serialport/parser-readline";
-import { SocketCommandsService } from "../SocketConnection/services";
+import { EventBusService } from "../EventBus/services";
+import { SocketCommandsHelper } from "src/helpers";
 
 @Injectable()
 export class CardReaderService implements OnApplicationBootstrap {
@@ -10,7 +11,7 @@ export class CardReaderService implements OnApplicationBootstrap {
     private readonly _serialPorts: Map<SerialDeviceType, SerialPortDevice> = new Map();
 
     constructor(
-        private readonly socketCommandsService: SocketCommandsService,
+        private readonly eventBus: EventBusService,
     ) {}
 
     onApplicationBootstrap() {
@@ -58,6 +59,7 @@ export class CardReaderService implements OnApplicationBootstrap {
 
             parser.on('data', (data: string) => {
                 this.logger.warn(data);
+                SocketCommandsHelper.sendProcessingCard(this.eventBus.instance);
 
                 // 973373553
                 // num = 9
@@ -66,7 +68,7 @@ export class CardReaderService implements OnApplicationBootstrap {
                     const cardId = parseInt((data.split(',')[1]).split(' ')[0]);
 
                     // Sending this cardId to our frontend
-                    this.socketCommandsService.sendCardId(cardId);
+                    SocketCommandsHelper.sendCardId(this.eventBus.instance, cardId);
                 };
                 // if (regexp.test(data)) {
                 //     const cardId = regexp.exec(data)[0];
