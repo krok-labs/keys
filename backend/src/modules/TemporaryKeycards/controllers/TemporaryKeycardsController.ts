@@ -21,13 +21,14 @@ export class TemporaryKeycardController implements TemporaryKeycardsControllerCo
     public async handleNewContract(
         @UploadedFiles() files: { faceImage?: Express.Multer.File[], documentImage?: Express.Multer.File[] }
     ) {
+        console.log(files);
         // Checking if we have every needed file
-        if (files.documentImage.length != 1 || files.faceImage.length != 1) {
+        if (files.documentImage?.length != 1 || files.faceImage?.length != 1) {
             throw new Error("Invalid files provided");
         };
 
-        const faceImage = files["faceImage"][1];
-        const documentImage = files["documentImage"][1];
+        const faceImage = files["faceImage"][0];
+        const documentImage = files["documentImage"][0];
 
         return this.database.getInstance()
             .insert(temporaryKeycards)
