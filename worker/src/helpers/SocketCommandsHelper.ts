@@ -3,14 +3,14 @@ import { EventEmitter } from "stream";
 
 export const SocketCommandsHelper = {
     sendProcessingCard(bus: EventEmitter) {
-        bus.emit('message', {
+        bus.emit('card_reader', {
             // todo: create shared enum
             type: "processingCard"
         });
     },
 
     sendCardId(bus: EventEmitter, cardId: number) {
-        bus.emit('message', {
+        bus.emit('card_reader', {
             // todo: create shared enum
             type: "cardId",
             cardId,

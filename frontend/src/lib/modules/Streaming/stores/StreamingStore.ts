@@ -1,7 +1,5 @@
-import { AbstractSharedStore } from "$lib/helpers";
+import { WorkerConnectionStore } from "$lib/modules/Worker";
 import { writable } from "svelte/store";
-import { StreamingChannel } from "../BroadcastChannel";
-import { StreamingFrameEvent } from "$lib/modules/Sync";
 
 interface StreamingStoreInterface {
     // todo: move to shared types
@@ -16,7 +14,6 @@ class StreamingStoreClass {
 
     private latestListenerId = -1;
     private listeners: Map<number, ListenerHandler> = new Map();
-    private side: "admin" | "guest" = "admin";
 
     constructor() {
         const { subscribe, update } = writable<StreamingStoreInterface>({
@@ -27,29 +24,31 @@ class StreamingStoreClass {
         this.update = update;
     };
 
-    // Onoly for guest side
     public async initialize() {
-        console.debug('[StreamingStore.initialize] Subscribing to StreamingChannel updates as guest');
-
-        this.side = "guest";
+        // Subscribing to stream
+        WorkerConnectionStore.subscribe("camera_stream");
     }
 
-    public async dispose() {};
+    public async dispose() {
+        // Unsubscribing from stream messages
+        WorkerConnectionStore.unsubscribe("camera_stream");
+    };
 
     // Start streaming
     async start(role: StreamingStoreInterface["role"]) {
-        // todo: implement
+        WorkerConnectionStore.send(role, "selectCamera");
+        WorkerConnectionStore.subscribe("camera_stream");
+    };
+
+    async stop() {
+        WorkerConnectionStore.send(undefined, "stopStreaming");
+        WorkerConnectionStore.unsubscribe("camera_stream");
     };
 
     handleFrame(frame: string) {
         // Sharing this frame with our listeners
         for (const [ id, handler ] of this.listeners) {
             handler(frame);
-        };
-
-        if (this.side == "admin") {
-            // Sharing this frame with guest side
-            StreamingFrameEvent.invoke({ frame });
         };
     };
 

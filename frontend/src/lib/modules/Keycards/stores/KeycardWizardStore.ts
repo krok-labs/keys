@@ -5,6 +5,7 @@ import { KeycardWizardStepsArray } from "../configuration";
 import { WorkerConnectionStore } from "$lib/modules/Worker";
 import { ApplicationStateStore } from "$lib/modules/Application";
 import { TemporaryKeycardsService } from "$lib/modules/TemporaryKeycards";
+import { StreamingStore } from "$lib/modules/Streaming";
 
 export interface KeycardWizardInterface {
     steps: KeycardWizardStep[],
@@ -38,19 +39,8 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
         this.update = update;
     }
 
-    public selectCamera(role: "face_scanner" | "document_scanner") {
-        console.log("Select camera");
-        WorkerConnectionStore.send(role, "selectCamera");
-        WorkerConnectionStore.send("camera_stream", "subscribe");
-    };
-
-    public stopStreaming() {
-        WorkerConnectionStore.send(undefined, "stopStreaming");
-        WorkerConnectionStore.send("camera_stream", "unsubscribe");
-    }
-
     public runAfterDispose(): void {
-        this.stopStreaming();
+        StreamingStore.stop();
     }
 
     public clear() {
@@ -116,11 +106,11 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
             this.update((store) => {
                 // First step (document scanner)
                 if (store.currentStepId + 1 == 1) {
-                    this.selectCamera('document_scanner');
+                    StreamingStore.start('document_scanner');
                 }
 
                 if (store.currentStepId + 1 == 2) {
-                    this.stopStreaming();
+                    StreamingStore.stop();
                 }
 
                 return {

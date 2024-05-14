@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { KeycardWizardStore, StreamingStore, SynchronizationStore, SynchronizationState } from "$lib/modules";
+    import { KeycardWizardStore, StreamingStore } from "$lib/modules";
     import { onDestroy, onMount } from "svelte";
     import { Circle } from "svelte-loading-spinners";
 

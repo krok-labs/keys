@@ -13,6 +13,11 @@ class WorkerConnectionStoreClass {
         const configuration = await getStore(ApplicationConfigurationStore.subscribe);
         this.client = io(configuration.workerUrl);
 
+        // Getting current app side and subscribing to different things
+        if (configuration.side == "admin") {
+            WorkerConnectionStore.subscribe("messages");
+        };
+
         // Messages
         this.client.on('message', (message) => {
             if (message.type == null) return;
@@ -35,8 +40,15 @@ class WorkerConnectionStoreClass {
         });
     };
 
+    public async subscribe(subscriptionName: string) {
+        this.send(subscriptionName, "subscribe");
+    };
+
+    public async unsubscribe(subscriptionName: string) {
+        this.send(subscriptionName, "unsubscribe");
+    };
+
     public async send(message: any, eventName = "message") {
-        console.log("send message:", message, eventName);
         this.client?.emit(eventName, message);
     };
 

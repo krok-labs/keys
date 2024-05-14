@@ -1,6 +1,6 @@
 import { EventHandler, EventType } from "$lib/types";
 import { writable } from "svelte/store";
-import { ChangeApplicationEvent, RoleSelectedEvent, StreamingFrameEvent, SyncStoreEvent } from "./events";
+import { ChangeApplicationEvent, RoleSelectedEvent, SyncStoreEvent } from "./events";
 import { SynchronizationState } from "./types";
 import { Socket, io } from "socket.io-client";
 import { getStore } from "$lib/helpers";
@@ -61,7 +61,6 @@ class SynchronizationStoreClass {
         EVENTS_MAP.set(EventType.ROLE_SELECTED, RoleSelectedEvent);
         EVENTS_MAP.set(EventType.SYNC_STORE, SyncStoreEvent);
         EVENTS_MAP.set(EventType.CHANGE_APPLICATION, ChangeApplicationEvent);
-        EVENTS_MAP.set(EventType.STREAMING_FRAME, StreamingFrameEvent);
 
         // Subscribing to events on this channel
         this.channel.on('event', (data) => {

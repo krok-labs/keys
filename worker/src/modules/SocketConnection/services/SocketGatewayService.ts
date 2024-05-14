@@ -37,12 +37,22 @@ export class SocketGatewayService implements OnGatewayConnection {
             };
         });
 
+        // CardReader-related
+        this.eventBus.instance.on('card_reader', (message) => {
+            for (const client of this.clientsMap.values()) {
+                if (client.subscriptions.includes(SocketClientSubscriptions.CARD_READER)) {
+                    client.socket.emit('message', message);
+                };
+            };
+        });
+
+        // Streaming-related
         this.eventBus.instance.on('stream', (frame) => {
             for (const client of this.clientsMap.values()) {
                 if (client.subscriptions.includes(SocketClientSubscriptions.CAMERA_STREAM)) {
                     client.socket.emit('stream', frame);
                 };
-            }
+            };
         });
     };
 
