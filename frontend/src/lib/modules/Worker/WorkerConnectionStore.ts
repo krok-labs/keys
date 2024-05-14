@@ -15,7 +15,7 @@ class WorkerConnectionStoreClass {
 
         // Getting current app side and subscribing to different things
         if (configuration.side == "admin") {
-            WorkerConnectionStore.subscribe("messages");
+            WorkerConnectionStore.subscribe("card_reader");
         };
 
         // Messages
