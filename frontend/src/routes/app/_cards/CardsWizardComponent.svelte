@@ -12,7 +12,7 @@
 
     import { KeycardWizardStore } from "$lib/modules/Keycards";
     import { WizardInputType } from "$lib/modules/Keycards/types";
-    import { ApplicationStateStore } from "$lib/modules";
+    import { ApplicationStateStore, StreamingStore } from "$lib/modules";
 
     let header: HTMLElement | null;
 
@@ -21,7 +21,7 @@
 
     onMount(() => {
         header = document.getElementById("header");
-        KeycardWizardStore.selectCamera('face_scanner');
+        StreamingStore.start("face_scanner");
     });
 
     export let side: "admin" | "guest";
