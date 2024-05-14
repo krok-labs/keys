@@ -92,6 +92,7 @@ export class SynchronizationGatewayService implements OnGatewayInit, OnGatewayCo
 
                 if (sendToClient == null) throw new Error(`Can not send event to ${sendTo}: ${sendToClient?.id}`);
 
+                this.logger.debug(`Passing message ${sendTo}: ${JSON.stringify(message)}`);
                 sendToClient.emit('event', message);
 
                 // Sniffing this event (if it's a SyncStore event)
