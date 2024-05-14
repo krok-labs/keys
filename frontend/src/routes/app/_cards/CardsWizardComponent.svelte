@@ -126,12 +126,14 @@
             { /each }
         </div>
     { :else }
-        <div class="absolute z-0">
-            { #if $KeycardWizardStore.currentImage != null }
-                <StillImageFeed stillImage={$KeycardWizardStore.currentImage} />
-            { :else }
-                <CameraFeed />
-            { /if }
+        <div class="absolute z-0 center-0">
+            <div class="w-screen h-screen relative">
+                { #if $KeycardWizardStore.currentImage != null }
+                    <StillImageFeed stillImage={$KeycardWizardStore.currentImage} />
+                { :else }
+                    <CameraFeed />
+                { /if }
+            </div>
         </div>
     { /if }
 </div>
