@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { UserStore, SynchronizationStore, SynchronizationState, KeysStore } from "$lib/modules";
+    import { UserStore, SynchronizationStore, SynchronizationState, KeysStore, ApplicationConfigurationStore, ApplicationStateStore, ApplicationStateEnum } from "$lib/modules";
     import { onDestroy, onMount } from "svelte";
     import { Circle } from "svelte-loading-spinners";
 
@@ -8,6 +8,9 @@
     const STORES = [UserStore, KeysStore];
 
     onMount(async () => {
+        // Updating our ApplicationStateStore
+        ApplicationStateStore.setState(ApplicationStateEnum.IDLE);
+
         // Initializing admin stores
         for (const store of STORES) {
             await store.initialize();
