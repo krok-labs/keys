@@ -36,4 +36,4 @@
     <div out:fade class="absolute z-20 bg-white"></div>
 { /if }
 
-<canvas bind:this={canvas} class="{classes} z-0" id="stillImage" {width} {height}></canvas>
+<canvas bind:this={canvas} class="{classes} w-full h-full z-0" id="stillImage" {width} {height}></canvas>

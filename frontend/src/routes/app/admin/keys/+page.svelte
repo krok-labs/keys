@@ -65,18 +65,19 @@
 
             <!-- Cancel transaction -->
             <div class="flex gap-4">
-                <Button on:click={async () => {
+                <!-- <Button on:click={async () => {
                     // todo: revoking all commits
                     await SelectedKeysStore.revokeAll();
 
                     // Changing current app state
                     ApplicationStateStore.setState(ApplicationStateEnum.IDLE);
-                }} icon={SolarArchiveDownMinimlisticLineDuotone} color="red" text="Відмінити операцію" />
+                }} icon={SolarArchiveDownMinimlisticLineDuotone} color="red" text="Відмінити операцію" /> -->
 
                 <!-- Continue to next step buutton -->
                 <Button on:click={() => {
-                    // todo: commit transactions
-                }} icon={SolarArchiveDownMinimlisticLineDuotone} color="blue" text="Зберегти інформацію" />
+                    // Changing current app state
+                    ApplicationStateStore.setState(ApplicationStateEnum.IDLE);
+                }} icon={SolarArchiveDownMinimlisticLineDuotone} color="blue" text="Продовжити" />
             </div>
         </header>
     { /if }

@@ -16,6 +16,7 @@ class UserStoreClass extends AbstractSharedStore<UserStoreInterface> {
     public readonly committedKeys = new CommittedKeysStoreClass(this);
 
     protected readonly storeId = "user";
+    private readonly INTERNAL_STORES = [this.allowedKeys, this.selectedKeys, this.committedKeys]
 
     constructor() {
         super();
@@ -30,6 +31,13 @@ class UserStoreClass extends AbstractSharedStore<UserStoreInterface> {
         // @ts-ignore
         this.update(() => (undefined));
         this.syncUpdates();
+    }
+
+    public runAfterDispose(): void {
+        // Disposing of all internal stores
+        for (const store of this.INTERNAL_STORES) {
+            store.dispose();
+        };
     }
 
     public async setUser(user: UserInterface) {
@@ -53,9 +61,7 @@ class UserStoreClass extends AbstractSharedStore<UserStoreInterface> {
 
     public async runAfterInitialization() {
         // Initializing internal stores
-        const INTERNAL_STORES = [this.allowedKeys, this.selectedKeys, this.committedKeys];
-
-        for (const store of INTERNAL_STORES) {
+        for (const store of this.INTERNAL_STORES) {
             store.initialize();
         };
     };

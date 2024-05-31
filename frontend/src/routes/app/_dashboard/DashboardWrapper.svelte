@@ -53,7 +53,8 @@
         { #each cards as card }
             <div class="{ card.size } h-52 relative p-3">
                 <button on:click={() => {
-                    if (card.app != null && card.isAvailable) {
+                    // if (card.app != null && card.isAvailable) {
+                    if (card.app != null) {
                         // @ts-ignore
                         ApplicationStateStore.changeApplication(card.app);
                     }

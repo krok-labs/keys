@@ -52,9 +52,10 @@ export class CameraStreamerService implements OnApplicationBootstrap {
             "-f", "dshow", 
             "-i", `video=${this.currentCamera.name}`,
             "-f", "mjpeg",
-            "-vb", "5M",
-            "-preset", "ultrafast", 
-            '-acodec', 'copy',
+            // old:
+            // "-vb", "5M",
+            // "-preset", "ultrafast", 
+            // '-acodec', 'copy',
             "pipe:1"
         ]);
 
