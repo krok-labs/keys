@@ -1,0 +1,74 @@
+To convert the hexadecimal code "423A048071" from a Wiegand reader to the decimal card number "973373553", you need to follow these steps:
+
+Convert the hexadecimal code to binary.
+Extract the facility code and card number from the binary representation.
+Convert the facility code and card number from binary to decimal.
+Let's go through each step:
+
+Convert the hexadecimal code "423A048071" to binary:
+
+"4" -> 0100
+"2" -> 0010
+"3" -> 0011
+"A" -> 1010
+"0" -> 0000
+"4" -> 0100
+"8" -> 1000
+"0" -> 0000
+"7" -> 0111
+"1" -> 0001
+Concatenating these binary representations, you get: 01000010001110100000010000001000000001110001
+
+Extract the facility code and card number:
+
+Facility Code: The first 8 bits (01000010) -> Binary: 66
+Card Number: The remaining 26 bits (01110100000010000001000000001110001) -> Binary: 769001903
+Convert the facility code and card number to decimal:
+
+Facility Code: Binary 66 -> Decimal: 66
+Card Number: Binary 769001903 -> Decimal: 973373553
+So, the facility code is 66, and the card number is 973373553, which matches the provided decimal card number.
+
+Mifare[423A6780048071] 004,32881 DF (0044,20) -> 423A6780048071 -> 01000010001110100110011110000000000001001000000001110001
+00111010000001001000000001110001
+Mifare[223A678004530B] 004,21259 DF (0044,20) -> 223A678004530B -> 004 (hex -> binary): 000000000100 + 21259 (decimal -> binary) 101001100001011
+Mifare[C2366580049454] 004,37972 DF (0044,20) -> 
+
+= 4 2 3 A 0 4 8 0 7 1
+= 0100 0010 0011 1010 0000 0100 1000 0000 0111 0001
+= 0100001000111010000001001000000001110001
+
+= 4 2 3 A 6 7 8 0 0 4 8 0 7 1
+= 0100 0010 0011 1010 0110 0111 1000 0000 0000 0100 1000 0000 0111 0001
+= 01000010001110100110011110000000000001001000000001110001
+
+= 2 2 3 A 6 7 8 0 0 4 5 3 0 B
+= 0010 0010 0011 1010 0110 0111 1000 0000 0000 0100 0101 0011 0000 1011
+= 00100010001110100110011110000000000001000101001100001011
+
+
+Experiment 1
+Mifare[223A678004530B] 004,21259 DF (0044,20) -> 223A678004530B -> 004 (hex -> binary): 000000000100 + 21259 (decimal -> binary) 101001100001011
+
+Hex number from Configurator: 223A04530B
+Converted to binary: 00100010 00111010000001000101001100001011
+Minus facility code (first 8 bits): 00111010000001000101001100001011
+Converted to decimal: 973361931
+
+223A 6780 04530B
+
+
+Experiment 2
+Mifare[C2366580049454] 004,37972 DF (0044,20) -> 
+
+C236 6580 049454
+C236049454 -> 11000010 00110110000001001001010001010100 -> 00110110000001001001010001010100 -
+-> 906269780
+
+
+Experiment 3
+Mifare[C2366580049454] 004,37972 DF (0044,20)
+
+C2 36 6580 049454
+36049454 -> 00110110000001001001010001010100 -> 906269780
+  

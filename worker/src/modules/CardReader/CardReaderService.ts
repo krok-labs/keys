@@ -31,7 +31,7 @@ export class CardReaderService implements OnApplicationBootstrap {
             const type = serialPort.type;
             const device = new SerialPort({
                 path: serialPort.port,
-                baudRate: 9600
+                baudRate: 9600,
             });
             const parser = device.pipe(new ReadlineParser({ delimiter: "\r\n" }));
 
@@ -61,11 +61,16 @@ export class CardReaderService implements OnApplicationBootstrap {
                 this.logger.warn(data);
                 SocketCommandsHelper.sendProcessingCard(this.eventBus.instance);
 
+                // 423A048071
                 // 973373553
+
+                // 223A04530B
+                // 973361931
                 // num = 9
                 
                 if (data.includes("Mifare")) {
                     const cardId = parseInt((data.split(',')[1]).split(' ')[0]);
+                    console.log(cardId);
 
                     // Sending this cardId to our frontend
                     SocketCommandsHelper.sendCardId(this.eventBus.instance, cardId);
