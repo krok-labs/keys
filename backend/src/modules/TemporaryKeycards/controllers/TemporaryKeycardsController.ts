@@ -3,6 +3,7 @@ import { TemporaryKeycardsControllerContract } from "../contracts";
 import { DrizzleDatabase } from "$backend/modules/Sources/services";
 import { temporaryKeycards } from "$backend/schema";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import { CreateTemporaryKeycardPayload } from "../payloads/CreateTemporaryKeycardPayload";
 import multer from "multer";
 
 @Controller("/keycards")
@@ -19,6 +20,7 @@ export class TemporaryKeycardController implements TemporaryKeycardsControllerCo
         dest: "./upload",
     }))
     public async handleNewContract(
+        @Body() CreateTemporaryKeycardPayload: CreateTemporaryKeycardPayload,
         @UploadedFiles() files: { faceImage?: Express.Multer.File[], documentImage?: Express.Multer.File[] }
     ) {
         console.log(files);
@@ -31,11 +33,16 @@ export class TemporaryKeycardController implements TemporaryKeycardsControllerCo
         const documentImage = files["documentImage"][0];
 
         return this.database.getInstance()
-            .insert(temporaryKeycards)
-            .values({
-                documentsImage: documentImage.path,
-                faceImage: faceImage.path,
+        .insert(temporaryKeycards)
+        .values({
+            surname: CreateTemporaryKeycardPayload.surname,
+            firstname: CreateTemporaryKeycardPayload.firstname,
+            middlename: CreateTemporaryKeycardPayload.middlename,
+            documentsImage: documentImage.path,
+            faceImage: faceImage.path,
             })
             .returning();
+
+            
     };
 };
