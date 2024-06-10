@@ -2,7 +2,6 @@ import { AbstractSharedStore, getStore } from "$lib/helpers";
 import { writable } from "svelte/store";
 import { type KeycardWizardStep } from "../types";
 import { KeycardWizardStepsArray } from "../configuration";
-import { WorkerConnectionStore } from "$lib/modules/Worker";
 import { ApplicationStateStore } from "$lib/modules/Application";
 import { TemporaryKeycardsService } from "$lib/modules/TemporaryKeycards";
 import { StreamingStore } from "$lib/modules/Streaming";
@@ -12,6 +11,16 @@ export interface KeycardWizardInterface {
     currentStepId: number,
 
     isNextStepAvailable: boolean,
+
+    // Form data
+    form: {
+        firstname?: string,
+        surname?: string,
+        middlename?: string,
+
+        // todo: number
+        cardNumber?: string,
+    },
 
     currentImage?: string,
     documentsImage?: string,
@@ -33,6 +42,7 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
             currentStepId: 0,
             steps: KeycardWizardStepsArray,
             isNextStepAvailable: false,
+            form: {},
         });
     
         this.subscribe = subscribe;
@@ -48,6 +58,7 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
             currentStepId: 0,
             steps: KeycardWizardStepsArray,
             isNextStepAvailable: false,
+            form: {},
         }));
         this.syncUpdates();
     };
@@ -57,7 +68,10 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
         const store = await getStore(this.subscribe);
 
         // Sending this images to backend
-        await TemporaryKeycardsService.commitContract(store.faceImage!, store.documentsImage!);
+
+        // urgh
+        // @ts-ignore
+        await TemporaryKeycardsService.commitContract(store.faceImage!, store.documentsImage!, store.form);
 
         ApplicationStateStore.changeApplication('dashboard');
     };
@@ -117,13 +131,25 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
                     ...store,
                     currentStepId: store.currentStepId + 1,
                     
-                    // step2-only
-                    ...(store.currentStepId + 1) == 2 ? { isNextStepAvailable: true } : {}
+                    // step3-only
+                    ...(store.currentStepId + 1) == 3 ? { isNextStepAvailable: true } : {}
                 };
             });
 
             this.syncUpdates();
         };
+    };
+
+    public async setFormProperty(property: keyof KeycardWizardInterface["form"], value: string | undefined) {
+        this.update((obj) => {
+            return {
+                ...obj,
+                form: {
+                    ...obj.form,
+                    [property]: value
+                }
+            }
+        });
     };
 
     private setImage(opts: { currentImage?: string, documentsImage?: string, faceImage?: string }) {
@@ -137,7 +163,7 @@ class KeycardWizardStoreClass extends AbstractSharedStore<KeycardWizardInterface
         this.syncUpdates();
     };
 
-    private setIsNextStateAvailable(isAvailable: boolean) {
+    public setIsNextStateAvailable(isAvailable: boolean) {
         this.update((store) => {
             return {
                 ...store,

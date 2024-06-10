@@ -63,6 +63,9 @@ export const temporaryKeycards = sqliteTable('temporary_keycards', {
     surname: text('surname').notNull(),
     firstname: text('firstname').notNull(),
     middlename: text('middlename').notNull(),
+
+    // todo: number?
+    cardNumber: text('card_number'),
     
     documentsImage: text('documents_scan_image').notNull(),
     faceImage: text('person_scan_image').notNull(),

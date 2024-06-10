@@ -36,10 +36,7 @@ export class TemporaryKeycardController implements TemporaryKeycardsControllerCo
         let expiresAt = moment().startOf("day");
         expiresAt.add("1", "day");
 
-        if (payload.type == TemporaryKeycardType.TEMPORARY) {
-            // todo: standartize errors
-            if (payload.expiresAt == null) throw new BadRequestException("No expiresAt property provided");
-            
+        if (payload.expiresAt != null) {
             // Updating expiresAt
             // todo: check provided expiresAt date
             expiresAt = moment(payload.expiresAt);
@@ -51,6 +48,7 @@ export class TemporaryKeycardController implements TemporaryKeycardsControllerCo
                 surname: payload.surname,
                 firstname: payload.firstname,
                 middlename: payload.middlename,
+                cardNumber: payload.cardNumber,
                 
                 documentsImage: documentImage.path,
                 faceImage: faceImage.path,

@@ -2,10 +2,6 @@ import { IsDate, IsEnum, IsNotEmpty, IsString, IsOptional, IsDateString } from '
 import { TemporaryKeycardType } from './TemporaryKeycardType';
 
 export class CreateTemporaryKeycardPayload {
-    // Keycard Type
-    @IsEnum(TemporaryKeycardType)
-    type: TemporaryKeycardType;
-
     @IsNotEmpty()
     @IsString()
     surname: string;
@@ -17,6 +13,10 @@ export class CreateTemporaryKeycardPayload {
     @IsNotEmpty()
     @IsString()
     middlename: string;
+
+    @IsString()
+    @IsOptional()
+    cardNumber: string;
 
     // todo: add ability to add custom expiration date
     @IsDateString()
