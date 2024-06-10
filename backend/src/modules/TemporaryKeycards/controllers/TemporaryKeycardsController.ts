@@ -1,10 +1,11 @@
-import { Body, Controller, Post, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, BadRequestException, Post, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { TemporaryKeycardsControllerContract } from "../contracts";
 import { DrizzleDatabase } from "$backend/modules/Sources/services";
 import { temporaryKeycards } from "$backend/schema";
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { CreateTemporaryKeycardPayload } from "../payloads/CreateTemporaryKeycardPayload";
-import multer from "multer";
+import { TemporaryKeycardType } from "../payloads";
+import * as moment from "moment";
 
 @Controller("/keycards")
 export class TemporaryKeycardController implements TemporaryKeycardsControllerContract {
@@ -20,10 +21,9 @@ export class TemporaryKeycardController implements TemporaryKeycardsControllerCo
         dest: "./upload",
     }))
     public async handleNewContract(
-        @Body() CreateTemporaryKeycardPayload: CreateTemporaryKeycardPayload,
+        @Body() payload: CreateTemporaryKeycardPayload,
         @UploadedFiles() files: { faceImage?: Express.Multer.File[], documentImage?: Express.Multer.File[] }
     ) {
-        console.log(files);
         // Checking if we have every needed file
         if (files.documentImage?.length != 1 || files.faceImage?.length != 1) {
             throw new Error("Invalid files provided");
@@ -32,17 +32,31 @@ export class TemporaryKeycardController implements TemporaryKeycardsControllerCo
         const faceImage = files["faceImage"][0];
         const documentImage = files["documentImage"][0];
 
+        // Checking this card's type
+        let expiresAt = moment().startOf("day");
+        expiresAt.add("1", "day");
+
+        if (payload.type == TemporaryKeycardType.TEMPORARY) {
+            // todo: standartize errors
+            if (payload.expiresAt == null) throw new BadRequestException("No expiresAt property provided");
+            
+            // Updating expiresAt
+            // todo: check provided expiresAt date
+            expiresAt = moment(payload.expiresAt);
+        }
+
         return this.database.getInstance()
-        .insert(temporaryKeycards)
-        .values({
-            surname: CreateTemporaryKeycardPayload.surname,
-            firstname: CreateTemporaryKeycardPayload.firstname,
-            middlename: CreateTemporaryKeycardPayload.middlename,
-            documentsImage: documentImage.path,
-            faceImage: faceImage.path,
+            .insert(temporaryKeycards)
+            .values({
+                surname: payload.surname,
+                firstname: payload.firstname,
+                middlename: payload.middlename,
+                
+                documentsImage: documentImage.path,
+                faceImage: faceImage.path,
+                
+                expiresAt: expiresAt.format("YYYY-MM-DD HH:MM:ss"),
             })
             .returning();
-
-            
     };
 };

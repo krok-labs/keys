@@ -28,9 +28,15 @@ CREATE TABLE `keys` (
 );
 --> statement-breakpoint
 CREATE TABLE `temporary_keycards` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`surname` text NOT NULL,
+	`firstname` text NOT NULL,
+	`middlename` text NOT NULL,
 	`documents_scan_image` text NOT NULL,
 	`person_scan_image` text NOT NULL,
-	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL
+	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`expires_at` text NOT NULL,
+	`deposited_at` text
 );
 --> statement-breakpoint
 CREATE TABLE `users` (
@@ -40,5 +46,6 @@ CREATE TABLE `users` (
 --> statement-breakpoint
 CREATE UNIQUE INDEX `key_contract_id_unique` ON `key_contract` (`id`);--> statement-breakpoint
 CREATE UNIQUE INDEX `keys_id_unique` ON `keys` (`id`);--> statement-breakpoint
+CREATE UNIQUE INDEX `temporary_keycards_id_unique` ON `temporary_keycards` (`id`);--> statement-breakpoint
 CREATE UNIQUE INDEX `users_id_unique` ON `users` (`id`);--> statement-breakpoint
 CREATE UNIQUE INDEX `users_aid_unique` ON `users` (`aid`);

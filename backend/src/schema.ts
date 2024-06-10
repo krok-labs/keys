@@ -68,7 +68,7 @@ export const temporaryKeycards = sqliteTable('temporary_keycards', {
     faceImage: text('person_scan_image').notNull(),
 
     createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
-    expiresAt: text('expires_at').notNull().default(sql`date('now', 'start of day', '+24 hours')`),
+    expiresAt: text('expires_at').notNull(),
     depositedAt: text('deposited_at'),
 });
 

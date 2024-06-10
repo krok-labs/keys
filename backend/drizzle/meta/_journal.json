@@ -1,12 +1,12 @@
 {
-  "version": "5",
+  "version": "7",
   "dialect": "sqlite",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1715590472520,
-      "tag": "0000_aromatic_leech",
+      "version": "6",
+      "when": 1718001161641,
+      "tag": "0000_overconfident_jasper_sitwell",
       "breakpoints": true
     }
   ]
