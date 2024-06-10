@@ -56,11 +56,23 @@ export const allowedKeys = sqliteTable('allowed_keys', {
 
 export type AllowedKeysModel = InferSelectModel<typeof allowedKeys>;
 
-// Temporary Keycards Schema
+// Temporary Keycards-Pass Schema
 export const temporaryKeycards = sqliteTable('temporary_keycards', {
+    id: integer('id').unique().primaryKey({ autoIncrement: true }).notNull(),
+
+    surname: text('surname').notNull(),
+    firstname: text('firstname').notNull(),
+    middlename: text('middlename').notNull(),
+
+    // todo: number?
+    cardNumber: text('card_number'),
+    
     documentsImage: text('documents_scan_image').notNull(),
     faceImage: text('person_scan_image').notNull(),
+
     createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    expiresAt: text('expires_at').notNull(),
+    depositedAt: text('deposited_at'),
 });
 
 export type TemporaryKeycardsModel = InferSelectModel<typeof temporaryKeycards>;

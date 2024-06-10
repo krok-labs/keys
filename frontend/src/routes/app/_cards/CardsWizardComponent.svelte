@@ -13,6 +13,7 @@
     import { KeycardWizardStore } from "$lib/modules/Keycards";
     import { WizardInputType } from "$lib/modules/Keycards/types";
     import { ApplicationStateStore, StreamingStore } from "$lib/modules";
+    import GuestInformationForm from "./_forms/GuestInformationForm.svelte";
 
     let header: HTMLElement | null;
 
@@ -67,6 +68,11 @@
         <section class="p-12 flex-grow overflow-auto">
             <h1 class="text-4xl text-black font-bold">{ currentStep?.title }</h1>
             <p class="mt-4 text-md text-gray-700">{ @html currentStep?.content }</p>
+
+            <!-- todo: abstract this shit -->
+            { #if $KeycardWizardStore.currentStepId == 2 }
+                <GuestInformationForm />
+            { /if }
         </section>
 
         <!-- Footer -->
@@ -91,7 +97,7 @@
     </div>
 
     <!-- Camera Feed -->
-    { #if $KeycardWizardStore.currentStepId == 2 }
+    { #if $KeycardWizardStore.currentStepId == 3 }
         <!-- Showing images -->
         <div class="w-2/3 py-6 h-full px-20 flex items-center justify-center gap-8 relative overflow-auto">
             { #each [
@@ -99,39 +105,58 @@
                     image: $KeycardWizardStore.documentsImage, 
                     title: "Фотографія документів",
                     description: "На фотографії документів має читатись основна інформація про гостя - ім'я, фамілія та подібні данні.",
+                    isShownToGuest: false,
                 },
                 {
                     image: $KeycardWizardStore.faceImage,
                     title: "Фотографія обличчя",
                     description: "На фотографії обличчя має бути видно обличчя гостя, котрому видається картка",
+                    isShownToGuest: true,
                 }] as scan }
-                <div class="w-full rounded-xl bg-white relative border-8 border-white">
-                    <!-- Header -->
-                    <section class="rounded-t-xl flex items-start justify-left p-4">
-                        <!-- Icon -->
-                        <SolarCameraSquareLinear class="mt-1 w-8 h-8 text-gray-800" />
+                { #if side == "admin" || (side == "guest" && scan.isShownToGuest) }
+                    <div class="w-full rounded-xl bg-white relative border-8 border-white">
+                        <!-- Header -->
+                        <section class="rounded-t-xl flex items-start justify-left p-4">
+                            <!-- Icon -->
+                            <SolarCameraSquareLinear class="mt-1 w-8 h-8 text-gray-800" />
 
-                        <!-- Text -->
-                        <div class="ml-4">
-                            <h1 class="text-xl font-medium">{ scan.title }</h1>
-                            <p class="text-xs text-gray-700">{ scan.description }</p>
-                        </div>
-                    </section>
+                            <!-- Text -->
+                            <div class="ml-4">
+                                <h1 class="text-xl font-medium">{ scan.title }</h1>
+                                <p class="text-xs text-gray-700">{ scan.description }</p>
+                            </div>
+                        </section>
 
-                    <!-- Image itself -->
-                    <section>
-                        <StillImageFeed class="w-full rounded-xl" stillImage={scan.image} />
-                    </section>
-                </div>
+                        <!-- Image itself -->
+                        <section>
+                            <StillImageFeed class="w-full rounded-xl" stillImage={scan.image} />
+                        </section>
+                    </div>
+                { /if }
             { /each }
+        </div>
+    { :else if $KeycardWizardStore.currentStepId == 2 }
+        <div class="w-full h-full flex flex-col items-center justify-center">
+            <h1 class="text-2xl font-bold">Ми заповнюємо важливі дані...</h1>
+            <p class="text-md text-gray-800">Будь ласка, зачекайте, поки ми заповнюємо важливі данні про ваш візит...</p>
         </div>
     { :else }
         <div class="absolute z-0 center-0">
             <div class="w-screen h-screen relative">
-                { #if $KeycardWizardStore.currentImage != null }
-                    <StillImageFeed stillImage={$KeycardWizardStore.currentImage} />
+                { #if ($KeycardWizardStore.currentStepId == 0 && side == "guest") || side == "admin" }
+                    { #if $KeycardWizardStore.currentImage != null }
+                        <StillImageFeed stillImage={$KeycardWizardStore.currentImage} />
+                    { :else }
+                        <CameraFeed />
+                    { /if }
                 { :else }
-                    <CameraFeed />
+                    <!-- urgh -->
+                    <div class="w-full h-full flex justify-end">
+                        <div class="w-2/3 h-full flex flex-col items-center justify-center">
+                            <h1 class="text-2xl font-bold">Ми заповнюємо важливі дані...</h1>
+                            <p class="text-md text-gray-800">Будь ласка, зачекайте, поки ми заповнюємо важливі данні про ваш візит...</p>
+                        </div>
+                    </div>
                 { /if }
             </div>
         </div>

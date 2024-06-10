@@ -20,10 +20,16 @@ class TemporaryKeycardsServiceClass {
         });
     };
 
-    public async commitContract(faceImage: string, documentImage: string) {
+    public async commitContract(faceImage: string, documentImage: string, form: { firstname: string, surname: string, middlename: string, cardNumber: string }) {
         const formData = new FormData();
+
         formData.append("faceImage", new File([await this.base64ToBlob(faceImage)], "faceImage.jpeg"));
         formData.append("documentImage", new File([await this.base64ToBlob(documentImage)], "documentImage.jpeg"));
+
+        formData.append("firstname", form.firstname);
+        formData.append("surname", form.surname);
+        formData.append("middlename", form.middlename);
+        formData.append("cardNumber", form.cardNumber);
 
         return (await fetch(`${await this.getApiUrl()}/keycards/contract`, {
             method: 'POST',

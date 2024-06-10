@@ -27,11 +27,11 @@ export class CameraListService implements OnApplicationBootstrap {
     private readonly cameras: Record<CameraRole, CameraEntry> = {
         [CameraRole.DOCUMENT_SCANNER]: {
             id: 0,
-            name: 'Logi C270 HD WebCam'
+            name: 'USB Camera'
         },
         [CameraRole.FACE_SCANNER]: {
-            id: 0,
-            name: 'USB2.0 Camera'
+            id: 1,
+            name: 'USB Camera'
         }
     };
 

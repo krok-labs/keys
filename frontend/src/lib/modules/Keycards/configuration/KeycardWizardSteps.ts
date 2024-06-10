@@ -15,6 +15,12 @@ export const KeycardWizardStepsArray: KeycardWizardStep[] = [
     },
     {
         id: 2,
+        inputType: WizardInputType.FORM,
+        title: "Заповнення інформації",
+        content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto error tempore, veniam ab iure quidem eaque harum non quis reiciendis quo laboriosam vero recusandae delectus repellendus impedit eos soluta nihil.",
+    },
+    {
+        id: 3,
         title: "Видача перепустки",
         content: "Будь ласка, перевірьте правильність всіх фотографій та данних.<br /><br />При натисканні на кнопку \"Продовжити\" ми збережемо ці фотографії в базі данних та видамо Вам нову тимчасову перепустку.",
     }

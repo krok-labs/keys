@@ -30,11 +30,15 @@ export class CameraStreamerService implements OnApplicationBootstrap {
     };
 
     public async stop() {
-        if (this.streamerProcess != null) {
-            this.logger.warn('Stopping previous camera stream process');
-            this.streamerProcess.removeAllListeners();
-            this.streamerProcess.kill();
-        };
+        return new Promise((resolve) => {
+            if (this.streamerProcess != null) {
+                this.logger.warn('Stopping previous camera stream process');
+                this.streamerProcess.removeAllListeners();
+                this.streamerProcess.kill();
+            };
+            
+            setTimeout(() => resolve(null), 250);
+        });
     };
 
     // Stream camera
@@ -63,6 +67,14 @@ export class CameraStreamerService implements OnApplicationBootstrap {
         this.streamerProcess.stdout.on('data', (frame) => {
             // Sending this frame
             SocketCommandsHelper.sendStreamFrame(this.eventBus.instance, frame);
+        });
+
+        this.streamerProcess.on('error', (msg) => {
+            this.logger.error(msg);
+        });
+
+        this.streamerProcess.stderr.on('data', (msg) => {
+            this.logger.error(msg);
         });
 
         this.streamerProcess.on('close', (code) => {

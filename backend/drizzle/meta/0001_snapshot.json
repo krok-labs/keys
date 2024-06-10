@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "07ad064e-aeb5-4c6c-85e8-3c9036dc908d",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "e590bbac-bca0-427d-a49e-e647a7ba1112",
+  "prevId": "07ad064e-aeb5-4c6c-85e8-3c9036dc908d",
   "tables": {
     "allowed_keys": {
       "name": "allowed_keys",
@@ -247,6 +247,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "card_number": {
+          "name": "card_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "documents_scan_image": {

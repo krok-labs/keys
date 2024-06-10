@@ -1,3 +1,4 @@
 export enum WizardInputType {
-    IMAGE = 'image'
+    IMAGE = 'image',
+    FORM = 'form',
 };

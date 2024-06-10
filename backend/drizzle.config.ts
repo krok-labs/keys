@@ -5,7 +5,7 @@ export default {
     out: "./drizzle",
     
     // Drizzle-Kit related
-    driver: "better-sqlite",
+    dialect: 'sqlite',
     dbCredentials: {
         url: "sqlite.db"
     }
