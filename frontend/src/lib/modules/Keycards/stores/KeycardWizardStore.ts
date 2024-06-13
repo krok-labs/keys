@@ -5,6 +5,7 @@ import { KeycardWizardStepsArray } from "../configuration";
 import { ApplicationStateStore } from "$lib/modules/Application";
 import { TemporaryKeycardsService } from "$lib/modules/TemporaryKeycards";
 import { StreamingStore } from "$lib/modules/Streaming";
+import type { Moment } from "moment";
 
 export interface KeycardWizardInterface {
     steps: KeycardWizardStep[],
@@ -20,6 +21,7 @@ export interface KeycardWizardInterface {
 
         // todo: number
         cardNumber?: string,
+        expiresAt?: Moment,
     },
 
     currentImage?: string,

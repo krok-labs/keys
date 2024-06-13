@@ -1,5 +1,9 @@
-<script lang="ts">
-    import CardsWizardComponent from "../../_cards/CardsWizardComponent.svelte";
-</script>
+<script>
+    import { goto } from "$app/navigation";
+    import { ApplicationStateStore } from "$lib/modules";
+    import { onMount } from "svelte";
 
-<CardsWizardComponent side="admin" />
+    onMount(() => {
+        ApplicationStateStore.changeApplication('cards/one-time');
+    });
+</script>

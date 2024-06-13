@@ -1,5 +1,6 @@
 import { getStore } from "$lib/helpers";
 import { ApplicationConfigurationStore } from "$lib/modules/Application";
+import type { Moment } from "moment";
 
 class TemporaryKeycardsServiceClass {
     private async getApiUrl(): Promise<string> {
@@ -20,7 +21,7 @@ class TemporaryKeycardsServiceClass {
         });
     };
 
-    public async commitContract(faceImage: string, documentImage: string, form: { firstname: string, surname: string, middlename: string, cardNumber: string }) {
+    public async commitContract(faceImage: string, documentImage: string, form: { firstname: string, surname: string, middlename: string, cardNumber: string, expiresAt?: Moment }) {
         const formData = new FormData();
 
         formData.append("faceImage", new File([await this.base64ToBlob(faceImage)], "faceImage.jpeg"));
@@ -30,6 +31,10 @@ class TemporaryKeycardsServiceClass {
         formData.append("surname", form.surname);
         formData.append("middlename", form.middlename);
         formData.append("cardNumber", form.cardNumber);
+
+        if (form.expiresAt) {
+            formData.append("expiresAt", form.expiresAt.format("YYYY-MM-DD HH:MM:ss"));
+        };
 
         return (await fetch(`${await this.getApiUrl()}/keycards/contract`, {
             method: 'POST',

@@ -26,6 +26,7 @@
     });
 
     export let side: "admin" | "guest";
+    export let type: "temporary" | "one-time";
 </script>
 
 <div class="absolute overflow-hidden w-full h-screen bg-gray-100 flex items-start justify-start top-0 pb-6" style="padding-top: {header?.clientHeight}px;">
@@ -70,8 +71,8 @@
             <p class="mt-4 text-md text-gray-700">{ @html currentStep?.content }</p>
 
             <!-- todo: abstract this shit -->
-            { #if $KeycardWizardStore.currentStepId == 2 }
-                <GuestInformationForm />
+            { #if $KeycardWizardStore.currentStepId == 2 && side == "admin" }
+                <GuestInformationForm isExpiresAtSelectable={type == "temporary" ? true : false} />
             { /if }
         </section>
 

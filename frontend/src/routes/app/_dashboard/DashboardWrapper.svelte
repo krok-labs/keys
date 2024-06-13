@@ -4,6 +4,8 @@
     import SolarCursorLinear from '~icons/solar/cursor-linear';
     import SolarKeyBold from '~icons/solar/key-bold';
     import SolarCard2Broken from '~icons/solar/card-2-broken';
+    import SolarCalendarLinear from '~icons/solar/calendar-linear'
+
     import { ApplicationStateStore } from "$lib/modules";
 
     let header: HTMLElement | null;
@@ -11,14 +13,25 @@
     const cards = [
         {
             type: "app-big",
-            app: "cards",
+            app: "cards/temporary",
+            size: "w-2/6",
+            isAvailable: true,
+
+            icon: SolarCalendarLinear,
+            iconColor: "text-orange-500",
+            title: "Тимчасові перепустки",
+            description: "Тимчасові перепустки, котрі видаються на термін від 1-го місяця і аж до 6-ти місяців.",
+        },
+        {
+            type: "app-big",
+            app: "cards/one-time",
             size: "w-2/6",
             isAvailable: true,
 
             icon: SolarCard2Broken,
-            iconColor: "text-orange-500",
-            title: "Тимчасові перепустки",
-            description: "Немає перепустки? Не проблема - в данному сервіси Ви просто зможете створити тимчасову перепустку.",
+            iconColor: "text-pink-500",
+            title: "Разові перепустки",
+            description: "Разові перепустки, які видаються гостям для разового проходу в Університет. Діють один день.",
         },
         {
             type: "app-big",

@@ -4,8 +4,8 @@ import { getStore } from "$lib/helpers";
 import { EventHandler, EventType } from "$lib/types";
 import { SynchronizationStore } from "../SynchronizationStore";
 
-interface ChangeApplicationEventPayload {
-    app: "dashboard" | "keys" | "cards"
+export interface ChangeApplicationEventPayload {
+    app: "dashboard" | "keys" | "cards/temporary" | "cards/one-time"
 };
 
 class ChangeApplicationEventClass implements EventHandler<ChangeApplicationEventPayload> {

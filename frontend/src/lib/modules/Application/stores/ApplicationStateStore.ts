@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { AbstractSharedStore, getStore } from "$lib/helpers";
 import { ApplicationStateEnum } from "../types";
-import { ChangeApplicationEvent, SynchronizationStore } from "$lib/modules/Sync";
+import { ChangeApplicationEvent, SynchronizationStore, type ChangeApplicationEventPayload } from "$lib/modules/Sync";
 
 interface ApplicationStateInterface {
     state: ApplicationStateEnum,
@@ -35,7 +35,7 @@ class ApplicationStateStoreClass extends AbstractSharedStore<ApplicationStateInt
         this.syncUpdates();
     };
 
-    public async changeApplication(app: "dashboard" | "cards" | "keys") {
+    public async changeApplication(app: ChangeApplicationEventPayload["app"]) {
         // Getting current app side 
         ChangeApplicationEvent.invoke({ app });
     };
